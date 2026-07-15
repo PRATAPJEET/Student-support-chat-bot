@@ -1,7 +1,7 @@
 import os
 import streamlit as st
 from google import genai
-from google.genai import types  # Imported to pass custom API configurations
+from google.genai import types
 from dotenv import load_dotenv
 
 # Load local environment variables if present (for local desktop running)
@@ -19,7 +19,6 @@ def init_chatbot(force_rebuild=False, custom_pdf_text=None):
         st.stop()
         
     if "genai_client" not in st.session_state:
-        # Bypasses the endpoint routing bug by enforcing standard v1 API context
         st.session_state.genai_client = genai.Client(
             api_key=api_key,
             http_options=types.HttpOptions(api_version='v1')
@@ -36,8 +35,9 @@ def get_ai_stream_response(messages):
     client = st.session_state.genai_client
     
     try:
+        # UPDATED: Swapped to the active model tier to avoid the 404 block
         response_stream = client.models.generate_content_stream(
-            model='gemini-2.5-flash',
+            model='gemini-3.5-flash',
             contents=messages
         )
         
