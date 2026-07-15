@@ -37,7 +37,7 @@ def get_ai_stream_response(messages):
     try:
         # UPDATED: Swapped to the active model tier to avoid the 404 block
         response_stream = client.models.generate_content_stream(
-            model='gemini-3.5-flash',
+            model='gemini-3.1-flash-lite',
             contents=messages
         )
         
