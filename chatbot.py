@@ -1,51 +1,46 @@
 import os
 import streamlit as st
 from google import genai
-from google.genai import types
 from dotenv import load_dotenv
 
+# Load local environment variables if present (for local desktop running)
 load_dotenv()
 
-from utils.constants import MODEL_NAME
-from prompt import PROMPTS
-
-def init_chatbot(force_rebuild=False, custom_pdf_text=None):
-    """Initializes or switches the Gemini conversational context based on current app state."""
-    if "genai_client" not in st.session_state:
-        st.session_state.genai_client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
-
-    current_page = st.session_state.get("current_page", "Dashboard Home")
+def init_chatbot():
+    """
+    Initializes the Gemini API client.
+    Checks Streamlit cloud secrets first, then falls back to local environment variables.
+    """
+    # 1. Try fetching from Streamlit Cloud Secrets vault
+    # 2. Fall back to local .env configuration environment variable
+    api_key = st.secrets.get("GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY")
     
-    if "chat_session" not in st.session_state or force_rebuild:
-        college_context = ""
-        try:
-            with open("data/college_info.txt", "r", encoding="utf-8") as f:
-                college_context = f.read()
-        except FileNotFoundError:
-            pass
+    # Catch missing keys gracefully before the genai library throws an error
+    if not api_key:
+        st.error("🔑 Missing Gemini API Key. Please configure GEMINI_API_KEY in your Streamlit Secrets (Cloud) or .env file (Local).")
+        st.stop()
         
-        base_instruction = PROMPTS.get(current_page, "You are a helpful assistant.")
-        full_instruction = f"{base_instruction}\n\n[General Knowledge Context]:\n{college_context}"
-        
-        if current_page == "PDF Chat" and custom_pdf_text:
-            full_instruction = f"{PROMPTS.get('PDF Chat', '')}\n\n[UPLOADED DOCUMENT CONTENT]:\n{custom_pdf_text}"
-            
-        st.session_state.chat_session = st.session_state.genai_client.chats.create(
-            model=MODEL_NAME,
-            config=types.GenerateContentConfig(
-                system_instruction=full_instruction,
-                temperature=0.7,
-            )
-        )
+    # Initialize the correct Google GenAI SDK Client
+    if "genai_client" not in st.session_state:
+        st.session_state.genai_client = genai.Client(api_key=api_key)
 
-def get_ai_stream_response(user_question: str):
-    """Yields streaming chunks of text from the active conversation thread."""
-    init_chatbot()
+def get_chat_response(messages):
+    """
+    Sends the message history to the Gemini API and returns the response string.
+    """
+    if "genai_client" not in st.session_state:
+        init_chatbot()
+        
+    client = st.session_state.genai_client
+    
+    # Structure the message history appropriately for the model
+    # Adjust model name if you are targeting 'gemini-2.5-flash' or another specific variant
     try:
-        # Calls the streaming endpoint of the new google-genai SDK
-        response_stream = st.session_state.chat_session.send_message_stream(user_question)
-        for chunk in response_stream:
-            if chunk.text:
-                yield chunk.text
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=messages
+        )
+        return response.text
     except Exception as e:
-        yield f"CampusAI Engine Error: {str(e)}"
+        st.error(f"API Error: {str(e)}")
+        return "Sorry, I encountered an issue reaching out to the AI brain right now."
