@@ -1,6 +1,7 @@
 import os
 import streamlit as st
 from google import genai
+from google.genai import types  # Imported to pass custom API configurations
 from dotenv import load_dotenv
 
 # Load local environment variables if present (for local desktop running)
@@ -9,7 +10,7 @@ load_dotenv()
 def init_chatbot(force_rebuild=False, custom_pdf_text=None):
     """
     Initializes the Gemini API client.
-    Checks Streamlit cloud secrets first, then falls back to local environment variables.
+    Configured with explicit http_options to bridge compatibility with new AQ. tokens.
     """
     api_key = st.secrets.get("GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY")
     
@@ -18,7 +19,11 @@ def init_chatbot(force_rebuild=False, custom_pdf_text=None):
         st.stop()
         
     if "genai_client" not in st.session_state:
-        st.session_state.genai_client = genai.Client(api_key=api_key)
+        # Bypasses the endpoint routing bug by enforcing standard v1 API context
+        st.session_state.genai_client = genai.Client(
+            api_key=api_key,
+            http_options=types.HttpOptions(api_version='v1')
+        )
 
 def get_ai_stream_response(messages):
     """
@@ -31,13 +36,11 @@ def get_ai_stream_response(messages):
     client = st.session_state.genai_client
     
     try:
-        # Notice we use generate_content_stream here instead of generate_content
         response_stream = client.models.generate_content_stream(
             model='gemini-2.5-flash',
             contents=messages
         )
         
-        # Yield each text chunk as it arrives from the API
         for chunk in response_stream:
             if chunk.text:
                 yield chunk.text
