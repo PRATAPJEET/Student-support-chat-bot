@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 # Load local environment variables if present (for local desktop running)
 load_dotenv()
 
-def init_chatbot():
+def init_chatbot(force_rebuild=False, custom_pdf_text=None):
     """
     Initializes the Gemini API client.
     Checks Streamlit cloud secrets first, then falls back to local environment variables.
@@ -24,17 +24,16 @@ def init_chatbot():
     if "genai_client" not in st.session_state:
         st.session_state.genai_client = genai.Client(api_key=api_key)
 
-def get_chat_response(messages):
+def get_ai_stream_response(messages):
     """
     Sends the message history to the Gemini API and returns the response string.
+    Matches the exact import expected by app.py.
     """
     if "genai_client" not in st.session_state:
         init_chatbot()
         
     client = st.session_state.genai_client
     
-    # Structure the message history appropriately for the model
-    # Adjust model name if you are targeting 'gemini-2.5-flash' or another specific variant
     try:
         response = client.models.generate_content(
             model='gemini-2.5-flash',
