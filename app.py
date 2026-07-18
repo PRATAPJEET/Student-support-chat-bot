@@ -18,13 +18,16 @@ init_chatbot()
 
 # Helper function to fetch asset animations safely
 def load_lottie_url(url: str):
-    r = requests.get(url)
-    if r.status_code != 200:
+    try:
+        r = requests.get(url, timeout=5)
+        if r.status_code != 200:
+            return None
+        return r.json()
+    except:
         return None
-    return r.json()
 
-# Load a futuristic, cute robot assistant asset configuration
-lottie_robot = load_lottie_url("https://assets5.lottiefiles.com/packages/lf20_SIG27R.json")
+# Load a high-quality interactive AI tech assistant robot animation
+lottie_robot = load_lottie_url("https://raw.githubusercontent.com/tuhinsamanta/Lottie-Animation-JSON-URL/main/robot.json")
 
 # Initialize page state
 if "current_page" not in st.session_state:
@@ -65,6 +68,7 @@ if "Light Mode" in theme_choice:
             [data-testid="stBaseButton-secondary"] { background-color: #E2E8F0 !important; color: #0F172A !important; border: 1px solid #CBD5E1 !important; }
             [data-testid="stBaseButton-secondary"] * { color: #0F172A !important; }
             div[data-testid="metric-container"] { background-color: #F8FAFC !important; border: 1px solid #E2E8F0 !important; padding: 15px !important; border-radius: 10px !important; }
+            .about-box { background-color: #F8FAFC !important; border-left: 5px solid #0078FF !important; padding: 20px !important; border-radius: 8px !important; margin-bottom: 25px !important; box-shadow: 0 2px 4px rgba(0,0,0,0.04) !important; }
         </style>
     """, unsafe_allow_html=True)
 else:
@@ -77,22 +81,31 @@ else:
             [data-testid="stBaseButton-secondary"] { background-color: #1E293B !important; color: #F8FAFC !important; border: 1px solid #334155 !important; }
             [data-testid="stBaseButton-secondary"] * { color: #F8FAFC !important; }
             div[data-testid="metric-container"] { background-color: #1E293B !important; border: 1px solid #334155 !important; padding: 15px !important; border-radius: 10px !important; }
+            .about-box { background-color: #1E293B !important; border-left: 5px solid #0078FF !important; padding: 20px !important; border-radius: 8px !important; margin-bottom: 25px !important; }
         </style>
     """, unsafe_allow_html=True)
 
 # 4. Page Routing Controller Logic
 if st.session_state.current_page == "Dashboard Home":
     
-    # Header Hero Layout Split: Text on Left, Moving Robot Animation on Right!
+    # Hero Split: Title & About Section vs Floating Robot Animation
     col1, col2 = st.columns([2, 1], vertical_alignment="center")
     
     with col1:
         st.title("Welcome to CampusAI Pro")
         st.write("Learn faster and navigate university workflows seamlessly with an integrated multi-module AI assistant framework.")
+        
+        # 📌 RESTORED ABOUT SECTION WITH CLEAN CARD CONTAINER STYLE
+        st.markdown("""
+        <div class="about-box">
+            <h4>💡 About the Developer</h4>
+            <p><strong>I am Jeet Pratap, a B.Tech CSE enthusiast</strong> passionate about building intelligent systems, advanced algorithm engineering, and deep software infrastructure deployments.</p>
+        </div>
+        """, unsafe_allow_html=True)
     
     with col2:
         if lottie_robot:
-            st_lottie(lottie_robot, height=180, key="robot_assistant")
+            st_lottie(lottie_robot, height=220, speed=1, loop=True, quality="high", key="robot_assistant")
             
     st.markdown("---")
     
