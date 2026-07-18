@@ -1,13 +1,22 @@
-﻿import streamlit as st
-from utils.helpers import load_css
-from components.sidebar import render_sidebar
-
-# Initialize page state
-if "current_page" not in st.session_state:
-    st.session_state.current_page = "Home"
-
-# Render navigation sidebar
-render_sidebar()
-
-st.title("Welcome to CampusAI Pro")
-st.write("Select a tool from the sidebar to get started.")
+﻿# Add this code to the absolute bottom of your app.py file
+st.markdown("""
+    <style>
+        /* Automatically applies high-contrast styling adjustments for light mode elements */
+        html[data-theme="light"] [data-testid="stSidebar"], 
+        html[data-theme="light"] [data-testid="stSidebarContent"] {
+            background-color: #F1F5F9 !important;
+        }
+        html[data-theme="light"] [data-testid="stSidebar"] *, 
+        html[data-theme="light"] [data-testid="stSidebar"] span {
+            color: #0F172A !important;
+        }
+        html[data-theme="light"] [data-testid="stBaseButton-secondary"] {
+            background-color: #E2E8F0 !important;
+            color: #0F172A !important;
+            border: 1px solid #CBD5E1 !important;
+        }
+        html[data-theme="light"] [data-testid="stBaseButton-secondary"] * {
+            color: #0F172A !important;
+        }
+    </style>
+""", unsafe_allow_html=True)
