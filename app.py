@@ -20,13 +20,12 @@ init_chatbot()
 def load_lottie_url(url: str):
     try:
         r = requests.get(url, timeout=5)
-        if r.status_code != 200:
-            return None
-        return r.json()
+        if r.status_code == 200:
+            return r.json()
     except:
         return None
 
-# Load a high-quality interactive AI tech assistant robot animation
+# Load a premium interactive floating AI robot animation
 lottie_robot = load_lottie_url("https://raw.githubusercontent.com/tuhinsamanta/Lottie-Animation-JSON-URL/main/robot.json")
 
 # Initialize page state
@@ -38,7 +37,7 @@ st.sidebar.title("🎓 CampusAI")
 st.sidebar.caption("Your Intelligent Student Assistant")
 st.sidebar.markdown("---")
 
-theme_choice = st.sidebar.selectbox("Interface Theme", ["Dark Mode 🌙", "Light Mode 🌞"])
+theme_choice = st.sidebar.selectbox("Interface Theme", ["Light Mode 🌞", "Dark Mode 🌙"])
 st.sidebar.markdown("---")
 
 st.sidebar.subheader("🛠️ Navigation")
@@ -57,140 +56,215 @@ for page in pages:
     if st.sidebar.button(label, use_container_width=True):
         st.session_state.current_page = page
 
-# 3. Dynamic Theme Style Injection
+# 3. Premium SaaS UI Styling Framework (Light/Dark Switcher)
 if "Light Mode" in theme_choice:
     st.markdown("""
         <style>
+            /* Global Canvas Background with Abstract Shapes Visual Effect */
+            .stApp, [data-testid="stAppViewContainer"] {
+                background-color: #F8FAFC !important;
+                background-image: radial-gradient(circle at 10% 20%, rgba(0, 120, 255, 0.03) 0%, transparent 40%), 
+                                  radial-gradient(circle at 90% 80%, rgba(0, 120, 255, 0.03) 0%, transparent 40%) !important;
+                color: #0F172A !important;
+            }
             [data-testid="stSidebar"], [data-testid="stSidebarContent"] { background-color: #F1F5F9 !important; }
-            [data-testid="stSidebar"] *, [data-testid="stSidebar"] span, [data-testid="stSidebar"] p { color: #0F172A !important; }
-            .stApp, [data-testid="stAppViewContainer"] { background-color: #FFFFFF !important; color: #0F172A !important; }
-            h1, h2, h3, p, span, div.stMarkdownContainer, [data-testid="stMarkdownContainer"] p { color: #0F172A !important; }
-            [data-testid="stBaseButton-secondary"] { background-color: #E2E8F0 !important; color: #0F172A !important; border: 1px solid #CBD5E1 !important; }
-            [data-testid="stBaseButton-secondary"] * { color: #0F172A !important; }
-            div[data-testid="metric-container"] { background-color: #F8FAFC !important; border: 1px solid #E2E8F0 !important; padding: 15px !important; border-radius: 10px !important; }
-            .about-box { background-color: #F8FAFC !important; border-left: 5px solid #0078FF !important; padding: 20px !important; border-radius: 8px !important; margin-bottom: 25px !important; box-shadow: 0 2px 4px rgba(0,0,0,0.04) !important; }
+            [data-testid="stSidebar"] *, [data-testid="stSidebar"] span { color: #0F172A !important; }
+            
+            /* Typography Layout */
+            .hero-title { font-size: 3.2rem !important; font-weight: 800 !important; color: #0078FF !important; margin-bottom: 5px !important; }
+            .hero-subtitle { font-size: 2rem !important; font-weight: 700 !important; color: #1E293B !important; margin-bottom: 20px !important; }
+            .hero-desc { font-size: 1.15rem !important; color: #475569 !important; line-height: 1.7 !important; margin-bottom: 30px !important; }
+            
+            /* Developer Card Styling */
+            .about-card { background: #FFFFFF !important; border-left: 5px solid #0078FF !important; padding: 20px !important; border-radius: 12px !important; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05) !important; margin-bottom: 20px !important; }
+            
+            /* Stat Counter Styling */
+            .stat-box { background: #FFFFFF !important; padding: 25px !important; border-radius: 16px !important; text-align: center !important; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03) !important; border: 1px solid #E2E8F0 !important; transition: transform 0.3s ease !important; }
+            .stat-box:hover { transform: translateY(-5px) !important; }
+            .stat-num { font-size: 2.2rem !important; font-weight: 800 !important; color: #0078FF !important; margin-bottom: 5px !important; }
+            .stat-lbl { font-size: 0.95rem !important; color: #64748B !important; font-weight: 500 !important; }
+
+            /* Premium SaaS Feature Grid Cards */
+            .feature-card { background: #FFFFFF !important; padding: 30px 25px !important; border-radius: 20px !important; text-align: center !important; border: 1px solid #E2E8F0 !important; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02) !important; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; min-height: 250px !important; margin-bottom: 25px !important; }
+            .feature-card:hover { transform: translateY(-8px) !important; box-shadow: 0 20px 25px -5px rgba(0, 120, 255, 0.08) !important; border-color: #0078FF !important; }
+            .feature-icon { font-size: 2.5rem !important; margin-bottom: 15px !important; display: inline-block !important; padding: 10px !important; background: #F0F7FF !important; border-radius: 50% !important; width: 70px !important; height: 70px !important; line-height: 50px !important; }
+            .feature-title { font-size: 1.35rem !important; font-weight: 700 !important; color: #0F172A !important; margin-bottom: 10px !important; }
+            .feature-desc { font-size: 0.95rem !important; color: #64748B !important; line-height: 1.5 !important; }
         </style>
     """, unsafe_allow_html=True)
 else:
     st.markdown("""
         <style>
+            .stApp, [data-testid="stAppViewContainer"] {
+                background-color: #0B0F19 !important;
+                background-image: radial-gradient(circle at 10% 20%, rgba(0, 120, 255, 0.05) 0%, transparent 40%), 
+                                  radial-gradient(circle at 90% 80%, rgba(0, 120, 255, 0.05) 0%, transparent 40%) !important;
+                color: #F8FAFC !important;
+            }
             [data-testid="stSidebar"], [data-testid="stSidebarContent"] { background-color: #0F172A !important; }
-            [data-testid="stSidebar"] *, [data-testid="stSidebar"] span, [data-testid="stSidebar"] p { color: #F8FAFC !important; }
-            .stApp, [data-testid="stAppViewContainer"] { background-color: #0B0F19 !important; color: #F8FAFC !important; }
-            h1, h2, h3, p, span, div.stMarkdownContainer, [data-testid="stMarkdownContainer"] p { color: #F8FAFC !important; }
-            [data-testid="stBaseButton-secondary"] { background-color: #1E293B !important; color: #F8FAFC !important; border: 1px solid #334155 !important; }
-            [data-testid="stBaseButton-secondary"] * { color: #F8FAFC !important; }
-            div[data-testid="metric-container"] { background-color: #1E293B !important; border: 1px solid #334155 !important; padding: 15px !important; border-radius: 10px !important; }
-            .about-box { background-color: #1E293B !important; border-left: 5px solid #0078FF !important; padding: 20px !important; border-radius: 8px !important; margin-bottom: 25px !important; }
+            [data-testid="stSidebar"] *, [data-testid="stSidebar"] span { color: #F8FAFC !important; }
+            
+            .hero-title { font-size: 3.2rem !important; font-weight: 800 !important; color: #38BDF8 !important; margin-bottom: 5px !important; }
+            .hero-subtitle { font-size: 2rem !important; font-weight: 700 !important; color: #F8FAFC !important; margin-bottom: 20px !important; }
+            .hero-desc { font-size: 1.15rem !important; color: #94A3B8 !important; line-height: 1.7 !important; margin-bottom: 30px !important; }
+            
+            .about-card { background: #1E293B !important; border-left: 5px solid #38BDF8 !important; padding: 20px !important; border-radius: 12px !important; margin-bottom: 20px !important; }
+            
+            .stat-box { background: #1E293B !important; padding: 25px !important; border-radius: 16px !important; text-align: center !important; border: 1px solid #334155 !important; transition: transform 0.3s ease !important; }
+            .stat-box:hover { transform: translateY(-5px) !important; }
+            .stat-num { font-size: 2.2rem !important; font-weight: 800 !important; color: #38BDF8 !important; margin-bottom: 5px !important; }
+            .stat-lbl { font-size: 0.95rem !important; color: #94A3B8 !important; font-weight: 500 !important; }
+
+            .feature-card { background: #1E293B !important; padding: 30px 25px !important; border-radius: 20px !important; text-align: center !important; border: 1px solid #334155 !important; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; min-height: 250px !important; margin-bottom: 25px !important; }
+            .feature-card:hover { transform: translateY(-8px) !important; box-shadow: 0 20px 25px -5px rgba(56, 189, 248, 0.15) !important; border-color: #38BDF8 !important; }
+            .feature-icon { font-size: 2.5rem !important; margin-bottom: 15px !important; display: inline-block !important; padding: 10px !important; background: #0F172A !important; border-radius: 50% !important; width: 70px !important; height: 70px !important; line-height: 50px !important; }
+            .feature-title { font-size: 1.35rem !important; font-weight: 700 !important; color: #F8FAFC !important; margin-bottom: 10px !important; }
+            .feature-desc { font-size: 0.95rem !important; color: #94A3B8 !important; line-height: 1.5 !important; }
         </style>
     """, unsafe_allow_html=True)
 
-# 4. Page Routing Controller Logic
+# 4. Page Routing Logic
 if st.session_state.current_page == "Dashboard Home":
     
-    # Hero Split: Title & About Section vs Floating Robot Animation
-    col1, col2 = st.columns([2, 1], vertical_alignment="center")
+    # --- HERO HERO SECTION SPLIT ---
+    col1, col2 = st.columns([1.3, 1], vertical_alignment="center")
     
     with col1:
-        st.title("Welcome to CampusAI Pro")
-        st.write("Learn faster and navigate university workflows seamlessly with an integrated multi-module AI assistant framework.")
+        st.markdown('<div class="hero-title">AI Student Assistant</div>', unsafe_allow_html=True)
+        st.markdown('<div class="hero-subtitle">Your Personal AI Learning Companion</div>', unsafe_allow_html=True)
+        st.markdown('<div class="hero-desc">Learn faster with an intelligent AI assistant framework that can answer your academic questions, summarize notes, generate quizzes, write professional emails, and prepare smart study plans.</div>', unsafe_allow_html=True)
         
-        # 📌 RESTORED ABOUT SECTION WITH CLEAN CARD CONTAINER STYLE
+        # 📌 RESTORED DEVELOPER BIOGRAPHY BLOCK WITH PREMIUM DESIGN
         st.markdown("""
-        <div class="about-box">
-            <h4>💡 About the Developer</h4>
-            <p><strong>I am Jeet Pratap, a B.Tech CSE enthusiast</strong> passionate about building intelligent systems, advanced algorithm engineering, and deep software infrastructure deployments.</p>
+        <div class="about-card">
+            <span style="font-weight:700; font-size:1.1rem; display:block; margin-bottom:5px;">💡 About the Developer</span>
+            <span style="font-size:0.98rem; opacity:0.9;">I am <strong>Jeet Pratap</strong>, a B.Tech CSE enthusiast passionate about engineering custom AI pipelines, context indexing engines, and modern dashboard frameworks.</span>
         </div>
         """, unsafe_allow_html=True)
-    
+        
+        # Core Launch Call-to-Actions Buttons
+        btn_c1, btn_c2 = st.columns([1, 1])
+        with btn_c1:
+            if st.button("🔥 Start Chat Now", key="hero_start_chat", use_container_width=True):
+                st.session_state.current_page = "AI Chat Thread"
+                st.rerun()
+        with btn_c2:
+            st.link_button("🌐 View Portfolio", "https://github.com", use_container_width=True)
+
     with col2:
         if lottie_robot:
-            st_lottie(lottie_robot, height=220, speed=1, loop=True, quality="high", key="robot_assistant")
+            st_lottie(lottie_robot, height=380, speed=1.2, loop=True, quality="high", key="premium_robot")
             
-    st.markdown("---")
+    st.markdown("<br><br>", unsafe_allow_html=True)
     
-    # Metric Summary Row
-    m_col1, m_col2, m_col3 = st.columns(3)
-    with m_col1:
-        st.metric(label="⚡ System Status", value="24/7 Online")
-    with m_col2:
-        st.metric(label="⚙️ Active Modules", value="6 Specialized Engines")
-    with m_col3:
-        st.metric(label="🎯 Knowledge Integrity", value="Grounded Core")
+    # --- PROMINENT COUNTER ROW DISPLAY (Matching Example Structure) ---
+    s_col1, s_col2, s_col3 = st.columns(3)
+    with s_col1:
+        st.markdown('<div class="stat-box"><div class="stat-num">24/7</div><div class="stat-lbl">System Availability</div></div>', unsafe_allow_html=True)
+    with s_col2:
+        st.markdown('<div class="stat-box"><div class="stat-num">6</div><div class="stat-lbl">Smart Modules Loaded</div></div>', unsafe_allow_html=True)
+    with s_col3:
+        st.markdown('<div class="stat-box"><div class="stat-num">99%</div><div class="stat-lbl">Response Base Accuracy</div></div>', unsafe_allow_html=True)
         
-    st.markdown("### Select a Specialized Intelligence Tool")
+    st.markdown("<br><br><br>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center; margin-bottom: 10px;'>Everything you need in one smart dashboard.</h2>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: gray; margin-bottom: 40px;'>Select a component module from below or use the sidebar layout controls to launch applications.</p>", unsafe_allow_html=True)
     
-    # Beautiful Tool Grid System Layout
-    grid_col1, grid_col2, grid_col3 = st.columns(3)
+    # --- ANIMATED premium 6-GRID CARDS PLATFORM ---
+    grid1, grid2, grid3 = st.columns(3)
     
-    with grid_col1:
-        st.subheader("💬 General AI Chat")
-        st.write("Ask generic campus queries and plan routine academic tracks smoothly.")
-        if st.button("Launch Chat Thread", key="btn_chat", use_container_width=True):
+    with grid1:
+        st.markdown("""
+        <div class="feature-card">
+            <div class="feature-icon">💬</div>
+            <div class="feature-title">AI Chatbot</div>
+            <div class="feature-desc">Ask questions instantly and handle continuous thread conversational topics seamlessly.</div>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button("Open AI Chat Thread", key="go_chat", use_container_width=True):
             st.session_state.current_page = "AI Chat Thread"
             st.rerun()
             
-    with grid_col2:
-        st.subheader("🤝 Student Success")
-        st.write("Navigate administrative pipelines, deadlines, and counseling networks contextually.")
-        if st.button("Launch Success Workspace", key="btn_success", use_container_width=True):
+    with grid2:
+        st.markdown("""
+        <div class="feature-card">
+            <div class="feature-icon">🤝</div>
+            <div class="feature-title">Success Advisor</div>
+            <div class="feature-desc">Navigate administrative university pipelines, counselor guidelines, and active task tracking maps.</div>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button("Open Success Pipeline", key="go_success", use_container_width=True):
             st.session_state.current_page = "Student Success Support"
             st.rerun()
             
-    with grid_col3:
-        st.subheader("🏢 Institutional Knowledge Base")
-        st.write("Deep query college guidelines parsed straight out of official text parameters.")
-        if st.button("Launch Knowledge System", key="btn_kb", use_container_width=True):
+    with grid3:
+        st.markdown("""
+        <div class="feature-card">
+            <div class="feature-icon">🏢</div>
+            <div class="feature-title">Knowledge System</div>
+            <div class="feature-desc">Deep query college rulebooks and administrative files parsed cleanly through context layers.</div>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button("Open Institutional Base", key="go_kb", use_container_width=True):
             st.session_state.current_page = "Campus Knowledge Base"
             st.rerun()
 
     st.markdown("<br>", unsafe_allow_html=True)
-    grid_col4, grid_col5, grid_col6 = st.columns(3)
+    grid4, grid5, grid6 = st.columns(3)
     
-    with grid_col4:
-        st.subheader("💻 CS Programming Assistant")
-        st.write("Debug loops and parse software structures step-by-step with a virtual TA.")
-        if st.button("Launch Coding Engine", key="btn_cs", use_container_width=True):
+    with grid4:
+        st.markdown("""
+        <div class="feature-card">
+            <div class="feature-icon">💻</div>
+            <div class="feature-title">CS Programming Assistant</div>
+            <div class="feature-desc">Debug runtime code segments, evaluate algorithms, and analyze structure hierarchies.</div>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button("Open Coding TA Engine", key="go_cs", use_container_width=True):
             st.session_state.current_page = "CS Programming Help"
             st.rerun()
             
-    with grid_col5:
-        st.subheader("📄 Custom PDF Analysis Chat")
-        st.write("Drop in course notes or standard syllabi files to extract quick answers instantly.")
-        if st.button("Launch Document Processor", key="btn_pdf", use_container_width=True):
+    with grid5:
+        st.markdown("""
+        <div class="feature-card">
+            <div class="feature-icon">📄</div>
+            <div class="feature-title">Notes Summarizer</div>
+            <div class="feature-desc">Drop in syllabi or extensive PDF course notes to run vector semantic extracts instantly.</div>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button("Open Document Processor", key="go_pdf", use_container_width=True):
             st.session_state.current_page = "Chat with PDF Notes"
             st.rerun()
             
-    with grid_col6:
-        st.subheader("🎙️ Conversational Audio Assistant")
-        st.write("Interact with standard audio voice parsing setups in an agile interface window.")
-        if st.button("Launch Voice Simulator", key="btn_voice", use_container_width=True):
+    with grid6:
+        st.markdown("""
+        <div class="feature-card">
+            <div class="feature-icon">🎙️</div>
+            <div class="feature-title">Audio Assistant</div>
+            <div class="feature-desc">Convert and parse incoming voice assets contextually through clean audio interfaces.</div>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button("Open Voice Simulator", key="go_voice", use_container_width=True):
             st.session_state.current_page = "Voice Audio Assistant"
             st.rerun()
 
 elif st.session_state.current_page == "AI Chat Thread":
     st.title("💬 General AI Chat Thread")
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
-
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
-
+    if "messages" not in st.session_state: st.session_state.messages = []
+    for msg in st.session_state.messages:
+        with st.chat_message(msg["role"]): st.markdown(msg["content"])
+        
     if prompt := st.chat_input("Ask anything..."):
-        with st.chat_message("user"):
-            st.markdown(prompt)
+        with st.chat_message("user"): st.markdown(prompt)
         st.session_state.messages.append({"role": "user", "content": prompt})
-
         with st.chat_message("assistant"):
-            response_placeholder = st.empty()
-            full_response = ""
+            placeholder = st.empty()
+            resp = ""
             for chunk in get_ai_stream_response(prompt):
-                full_response += chunk
-                response_placeholder.markdown(full_response + "▌")
-            response_placeholder.markdown(full_response)
-        st.session_state.messages.append({"role": "assistant", "content": full_response})
-
+                resp += chunk
+                placeholder.markdown(resp + "▌")
+            placeholder.markdown(resp)
+        st.session_state.messages.append({"role": "assistant", "content": resp})
 else:
     st.title(f"🛠️ {st.session_state.current_page}")
     st.info(f"The workspace context for {st.session_state.current_page} is successfully mounted.")
