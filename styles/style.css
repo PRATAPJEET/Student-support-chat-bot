@@ -1,84 +1,16 @@
-/* Sidebar Modifications */
+@'
+/* Target the sidebar container container styling context */
 [data-testid="stSidebar"] {
-    background-color: #0b0f19 !important;
-    border-right: 1px solid #1e293b;
+    background-color: var(--background-color) !important;
 }
 
-/* Custom Metric Panel Design */
-.metric-card {
-    background-color: #111827;
-    border: 1px solid #1f2937;
-    padding: 20px;
-    border-radius: 12px;
-    text-align: center;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+/* Ensure text elements inside the sidebar toggle contrast smoothly */
+[data-testid="stSidebar"] .stText, 
+[data-testid="stSidebar"] span, 
+[data-testid="stSidebar"] p,
+[data-testid="stSidebar"] h1,
+[data-testid="stSidebar"] h2,
+[data-testid="stSidebar"] h3 {
+    color: var(--text-color) !important;
 }
-.metric-card h3 {
-    color: #3b82f6 !important;
-    font-size: 2rem !important;
-    margin: 0 !important;
-    font-weight: 700 !important;
-}
-.metric-card p {
-    color: #9ca3af !important;
-    margin: 5px 0 0 0 !important;
-    font-size: 0.95em;
-}
-
-/* Custom Grid Dashboard Feature Box Styling */
-.feature-box {
-    background: #1e293b;
-    border: 1px solid #334155;
-    padding: 20px;
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-    min-height: 140px;
-}
-.feature-box h4 {
-    color: #ffffff !important;
-    margin: 0 0 10px 0 !important;
-    font-weight: 600 !important;
-}
-.feature-box p {
-    color: #94a3b8 !important;
-    font-size: 0.9em !important;
-    margin: 0 !important;
-    line-height: 1.4;
-}
-
-/* Streamlit Button Overrides for the Grid Dashboard Links & Feedback */
-div.stButton > button {
-    background-color: #2563eb !important;
-    color: white !important;
-    border: none !important;
-    border-top-left-radius: 0px !important;
-    border-top-right-radius: 0px !important;
-    border-bottom-left-radius: 12px !important;
-    border-bottom-right-radius: 12px !important;
-    padding: 10px 20px !important;
-    font-weight: 600 !important;
-    transition: background-color 0.2s ease;
-}
-div.stButton > button:hover {
-    background-color: #1d4ed8 !important;
-}
-
-/* Fix specific button handling inside the feedback loop so it stays rectangular */
-[data-testid="stHorizontalBlock"] div.stButton > button {
-    border-radius: 8px !important;
-}
-
-/* Custom Radio Element Wrapper Style */
-div.row-widget.stRadio > div {
-    background-color: #111827;
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid #1f2937;
-}
-div.row-widget.stRadio label {
-    color: #9ca3af !important;
-    font-size: 1em !important;
-    padding: 6px 0px;
-    cursor: pointer;
-}
+'@ | Out-File -FilePath styles\style.css -Encoding utf8
