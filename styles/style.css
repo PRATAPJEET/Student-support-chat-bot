@@ -1,16 +1,31 @@
-@'
-/* Target the sidebar container container styling context */
-[data-testid="stSidebar"] {
+﻿/* 1. Global Page View and Background Overrides */
+.stApp, [data-testid="stAppViewContainer"] {
     background-color: var(--background-color) !important;
-}
-
-/* Ensure text elements inside the sidebar toggle contrast smoothly */
-[data-testid="stSidebar"] .stText, 
-[data-testid="stSidebar"] span, 
-[data-testid="stSidebar"] p,
-[data-testid="stSidebar"] h1,
-[data-testid="stSidebar"] h2,
-[data-testid="stSidebar"] h3 {
     color: var(--text-color) !important;
 }
-'@ | Out-File -FilePath styles\style.css -Encoding utf8
+
+/* 2. Complete Sidebar Correction for Light/Dark Mode Visibility */
+[data-testid="stSidebar"], [data-testid="stSidebarContent"] {
+    background-color: var(--secondary-background-color) !important;
+}
+
+/* 3. Force all Sidebar Navigation text links and Titles to adapt contrast */
+[data-testid="stSidebar"] *, 
+[data-testid="stSidebar"] span, 
+[data-testid="stSidebar"] p, 
+[data-testid="stSidebar"] h1, 
+[data-testid="stSidebar"] h2, 
+[data-testid="stSidebar"] h3,
+[data-testid="stSidebarNav"] a span {
+    color: var(--text-color) !important;
+}
+
+/* 4. Fix Welcome Page Banners / Inner Elements to avoid washing out */
+div.stMarkdown, div.stMarkdownContainer, .welcome-banner, h1, h2, h3, p {
+    color: var(--text-color) !important;
+}
+
+/* Clean up borders dynamically */
+[data-testid="stSidebar"] {
+    border-right: 1px solid var(--border-color) !important;
+}
