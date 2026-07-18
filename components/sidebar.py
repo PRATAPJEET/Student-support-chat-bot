@@ -1,75 +1,83 @@
 import streamlit as st
-from utils.constants import (
-    PAGE_HOME, PAGE_CHAT, PAGE_SUPPORT, PAGE_INFO, 
-    PAGE_PROGRAMMING, PAGE_PDF, PAGE_VOICE
-)
-from chatbot import init_chatbot
 
-def show_sidebar():
-    """Renders highly styled workspace toggle controller with theme options."""
-    with st.sidebar:
-        st.markdown("## 🎓 CampusAI")
-        st.markdown("<small style='color: #94a3b8;'>Your Intelligent Student Assistant</small>", unsafe_allow_html=True)
-        st.markdown("---")
-        
-        # ==========================
-        # INTERACTIVE THEME SWITCHER
-        # ==========================
-        st.markdown("### 🌗 Interface Theme")
-        if "theme_mode" not in st.session_state:
-            st.session_state.theme_mode = "Dark Mode 🌙"
-            
-        selected_theme = st.selectbox(
-            "Select Theme",
-            ["Dark Mode 🌙", "Light Mode ☀️"],
-            index=0 if st.session_state.theme_mode == "Dark Mode 🌙" else 1,
-            label_visibility="collapsed"
-        )
-        
-        if selected_theme != st.session_state.theme_mode:
-            st.session_state.theme_mode = selected_theme
-            st.rerun()
+def render_sidebar():
+    """
+    Renders the navigation sidebar with automatic light/dark contrast mapping.
+    """
+    st.sidebar.title("🎓 CampusAI")
+    st.sidebar.write("Your Intelligent Student Assistant")
+    st.sidebar.markdown("---")
+    
+    # 1. The Theme Selector Dropdown
+    theme_choice = st.sidebar.selectbox("Interface Theme", ["Light Mode 🌞", "Dark Mode 🌙"])
+    st.sidebar.markdown("---")
+    
+    # 2. Dynamic high-contrast CSS Injection that respects the dropdown selection
+    if "Light Mode" in theme_choice:
+        st.markdown("""
+            <style>
+                /* Sidebar Background & Sidebar Elements contrast */
+                [data-testid="stSidebar"], [data-testid="stSidebarContent"] {
+                    background-color: #F1F5F9 !important;
+                }
+                [data-testid="stSidebar"] *, [data-testid="stSidebar"] span, [data-testid="stSidebar"] p {
+                    color: #0F172A !important;
+                }
+                
+                /* Main Application Window Canvas Contrast */
+                .stApp, [data-testid="stAppViewContainer"] {
+                    background-color: #FFFFFF !important;
+                    color: #0F172A !important;
+                }
+                h1, h2, h3, p, span, div.stMarkdownContainer {
+                    color: #0F172A !important;
+                }
+                
+                /* Grid Button Custom Contrast Fixes */
+                [data-testid="stBaseButton-secondary"] {
+                    background-color: #E2E8F0 !important;
+                    color: #0F172A !important;
+                    border: 1px solid #CBD5E1 !important;
+                }
+                [data-testid="stBaseButton-secondary"] * {
+                    color: #0F172A !important;
+                }
+            </style>
+        """, unsafe_allow_html=True)
+    else:
+        st.markdown("""
+            <style>
+                /* Dark Mode styling logic defaults */
+                [data-testid="stSidebar"], [data-testid="stSidebarContent"] {
+                    background-color: #0F172A !important;
+                }
+                [data-testid="stSidebar"] *, [data-testid="stSidebar"] span, [data-testid="stSidebar"] p {
+                    color: #F8FAFC !important;
+                }
+                .stApp, [data-testid="stAppViewContainer"] {
+                    background-color: #0B0F19 !important;
+                    color: #F8FAFC !important;
+                }
+                h1, h2, h3, p, span, div.stMarkdownContainer {
+                    color: #F8FAFC !important;
+                }
+                [data-testid="stBaseButton-secondary"] {
+                    background-color: #1E293B !important;
+                    color: #F8FAFC !important;
+                    border: 1px solid #334155 !important;
+                }
+                [data-testid="stBaseButton-secondary"] * {
+                    color: #F8FAFC !important;
+                }
+            </style>
+        """, unsafe_allow_html=True)
 
-        st.markdown("---")
-        st.markdown("### 🛠️ Navigation")
-        
-        if "current_page" not in st.session_state:
-            st.session_state.current_page = PAGE_HOME
-            
-        options_map = {
-            PAGE_HOME: "🏠 Dashboard Home",
-            PAGE_CHAT: "💬 AI Chat Thread",
-            PAGE_SUPPORT: "🤝 Student Success Support",
-            PAGE_INFO: "🏢 Campus Knowledge Base",
-            PAGE_PROGRAMMING: "💻 CS Programming Help",
-            PAGE_PDF: "📄 Chat with PDF Notes",
-            PAGE_VOICE: "🎙️ Voice Audio Assistant"
-        }
-        
-        selected_display = st.radio(
-            label="Nav Options",
-            options=list(options_map.values()),
-            index=list(options_map.keys()).index(st.session_state.current_page),
-            label_visibility="collapsed"
-        )
-        
-        reverse_map = {v: k for k, v in options_map.items()}
-        selected_token = reverse_map[selected_display]
-        
-        if selected_token != st.session_state.current_page:
-            st.session_state.current_page = selected_token
-            st.session_state.messages = []  
-            if "pdf_text" in st.session_state:
-                del st.session_state["pdf_text"]
-            init_chatbot(force_rebuild=True)
-            st.rerun()
-            
-        st.markdown("---")
-        st.markdown("### 🧑‍💻 System Developer")
-        st.markdown(
-            "<div style='background-color: #1e293b; padding: 12px; border-radius: 8px; border: 1px solid #334155;'>"
-            "<strong>Jeet Pratap</strong><br>"
-            "<span style='font-size: 0.85em; color: #94a3b8;'>B.Tech Computer Science</span>"
-            "</div>", 
-            unsafe_allow_html=True
-        )
+    # 3. Sidebar Navigation Links
+    st.sidebar.subheader("🛠️ Navigation")
+    
+    # Render your menu navigation choices down below
+    # (Feel free to leave your existing button/page routing calls right here)
+    if st.sidebar.button("🏠 Dashboard Home"):
+        st.session_state.current_page = "Home"
+    if st.sidebar.button("💬 AI Chat Thread"):
+        st.session_state.current_page = "Chat"
