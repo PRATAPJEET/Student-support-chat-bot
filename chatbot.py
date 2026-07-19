@@ -13,11 +13,9 @@ def init_chatbot(force_rebuild=False, custom_pdf_text=None):
         st.error("🔑 Missing Gemini API Key. Please configure GEMINI_API_KEY in your Streamlit Secrets.")
         st.stop()
         
-    if "genai_client" not in st.session_state:
-        st.session_state.genai_client = genai.Client(
-            api_key=api_key,
-            http_options=types.HttpOptions(api_version='v1')
-        )
+    # Clean up client initialization so it handles API keys correctly out of the box
+    if "genai_client" not in st.session_state or force_rebuild:
+        st.session_state.genai_client = genai.Client(api_key=api_key)
 
 def get_ai_stream_response(current_prompt):
     """
@@ -35,9 +33,8 @@ def get_ai_stream_response(current_prompt):
     # Check if there's an existing conversation tracked in session_state
     if "messages" in st.session_state:
         for msg in st.session_state.messages:
-            # Skip system messages or internal keys if your app uses them
             if msg["role"] in ["user", "model", "assistant"]:
-                # The SDK expects 'model' instead of 'assistant'
+                # The SDK strictly expects 'model' instead of 'assistant'
                 role = "model" if msg["role"] == "assistant" else msg["role"]
                 
                 formatted_contents.append(
@@ -48,7 +45,6 @@ def get_ai_stream_response(current_prompt):
                 )
     
     # 2. Append the brand new prompt the user just sent if it isn't in history yet
-    # (Depending on your app.py, if app.py already appended it, this filters duplicates)
     if not formatted_contents or formatted_contents[-1].parts[0].text != current_prompt:
         formatted_contents.append(
             types.Content(
@@ -60,7 +56,7 @@ def get_ai_stream_response(current_prompt):
     try:
         # 3. Send the entire back-and-forth history to the API
         response_stream = client.models.generate_content_stream(
-            model='gemini-3.1-flash-lite',
+            model='gemini-2.5-flash',  # Running on the latest ultra-fast stable flash engine
             contents=formatted_contents
         )
         
@@ -69,5 +65,6 @@ def get_ai_stream_response(current_prompt):
                 yield chunk.text
                 
     except Exception as e:
-        st.error(f"API Error: {str(e)}")
-        yield "Sorry, I encountered an issue accessing my conversation history."
+        # Log to console so it doesn't break the user UI flow completely
+        print(f"Internal API Error Tracked: {str(e)}")
+        yield f"⚠️ API Error Encountered: {str(e)}"
