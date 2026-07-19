@@ -17,9 +17,15 @@ def init_chatbot(force_rebuild=False, custom_pdf_text=None):
         st.error("🔑 Missing Gemini API Key. Please configure GEMINI_API_KEY in your Streamlit Secrets.")
         st.stop()
         
-    # Initialize the modern developer client setup
+    # FORCE the client to use the API key directly in the HTTP options headers.
+    # This prevents the SDK from getting confused by Streamlit Cloud's internal metadata.
     if "genai_client" not in st.session_state or force_rebuild:
-        st.session_state.genai_client = genai.Client(api_key=api_key)
+        st.session_state.genai_client = genai.Client(
+            api_key=api_key,
+            http_options=types.HttpOptions(
+                headers={"X-Goog-Api-Key": api_key}
+            )
+        )
 
 def get_ai_stream_response(current_prompt):
     """
@@ -34,13 +40,10 @@ def get_ai_stream_response(current_prompt):
     # 1. Reconstruct the full historical conversation for the model
     formatted_contents = []
     
-    # Check if there's an existing conversation tracked in session_state
     if "messages" in st.session_state:
         for msg in st.session_state.messages:
             if msg["role"] in ["user", "model", "assistant"]:
-                # The SDK strictly expects 'model' instead of 'assistant'
                 role = "model" if msg["role"] == "assistant" else msg["role"]
-                
                 formatted_contents.append(
                     types.Content(
                         role=role,
@@ -69,6 +72,6 @@ def get_ai_stream_response(current_prompt):
                 yield chunk.text
                 
     except Exception as e:
-        # Log to server console while keeping UI clean
         print(f"Internal API Error Tracked: {str(e)}")
         yield f"⚠️ API Error Encountered: {str(e)}"
+        
