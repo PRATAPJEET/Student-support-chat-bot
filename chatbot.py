@@ -22,8 +22,8 @@ def init_chatbot(force_rebuild=False, custom_pdf_text=None):
 
 def get_ai_stream_response(current_prompt):
     """
-    Fetches the full conversation response securely. Uses standard content generation
-    to bypass the SDK v1beta streaming bug affecting new AQ. keys.
+    Fetches the full conversation response securely using the upgraded
+    production Gemini 3.5 framework to clear the 404 new user restrictions.
     """
     if "genai_client" not in st.session_state:
         init_chatbot()
@@ -51,9 +51,9 @@ def get_ai_stream_response(current_prompt):
         )
     
     try:
-        # Utilizing standard call to bypass the cloud authentication token bug
+        # Swapping out the locked model route for the active Gemini 3.5 production string
         response = client.models.generate_content(
-            model='gemini-2.5-flash',
+            model='gemini-3.5-flash',
             contents=formatted_contents
         )
         
