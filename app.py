@@ -5,7 +5,7 @@ from utils.helpers import load_css
 from chatbot import init_chatbot, get_ai_stream_response
 from streamlit_lottie import st_lottie
 
-# 1. Page Configuration Setup
+# 1. Page Configuration Setup (Enforcing Dark Layout Baseline)
 st.set_page_config(
     page_title="CampusAI Pro",
     page_icon="🎓",
@@ -32,12 +32,9 @@ lottie_robot = load_lottie_url("https://raw.githubusercontent.com/tuhinsamanta/L
 if "current_page" not in st.session_state:
     st.session_state.current_page = "Dashboard Home"
 
-# 2. Sidebar UI and Navigation Links
+# 2. Sidebar UI and Navigation Links (Theme Selector Removed)
 st.sidebar.title("🎓 CampusAI")
 st.sidebar.caption("Your Intelligent Student Assistant")
-st.sidebar.markdown("---")
-
-theme_choice = st.sidebar.selectbox("Interface Theme", ["Light Mode 🌞", "Dark Mode 🌙"])
 st.sidebar.markdown("---")
 
 st.sidebar.subheader("🛠️ Navigation")
@@ -52,76 +49,64 @@ pages = [
 ]
 
 for page in pages:
-    label = f"🔴 {page}" if st.session_state.current_page == page else page
+    label = f"💜 {page}" if st.session_state.current_page == page else page
     if st.sidebar.button(label, use_container_width=True):
         st.session_state.current_page = page
 
-# 3. Premium SaaS UI Styling Framework (Light/Dark Switcher)
-if "Light Mode" in theme_choice:
-    st.markdown("""
-        <style>
-            /* Global Canvas Background with Abstract Shapes Visual Effect */
-            .stApp, [data-testid="stAppViewContainer"] {
-                background-color: #F8FAFC !important;
-                background-image: radial-gradient(circle at 10% 20%, rgba(0, 120, 255, 0.03) 0%, transparent 40%), 
-                                  radial-gradient(circle at 90% 80%, rgba(0, 120, 255, 0.03) 0%, transparent 40%) !important;
-                color: #0F172A !important;
-            }
-            [data-testid="stSidebar"], [data-testid="stSidebarContent"] { background-color: #F1F5F9 !important; }
-            [data-testid="stSidebar"] *, [data-testid="stSidebar"] span { color: #0F172A !important; }
-            
-            /* Typography Layout */
-            .hero-title { font-size: 3.2rem !important; font-weight: 800 !important; color: #0078FF !important; margin-bottom: 5px !important; }
-            .hero-subtitle { font-size: 2rem !important; font-weight: 700 !important; color: #1E293B !important; margin-bottom: 20px !important; }
-            .hero-desc { font-size: 1.15rem !important; color: #475569 !important; line-height: 1.7 !important; margin-bottom: 30px !important; }
-            
-            /* Developer Card Styling */
-            .about-card { background: #FFFFFF !important; border-left: 5px solid #0078FF !important; padding: 20px !important; border-radius: 12px !important; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05) !important; margin-bottom: 20px !important; }
-            
-            /* Stat Counter Styling */
-            .stat-box { background: #FFFFFF !important; padding: 25px !important; border-radius: 16px !important; text-align: center !important; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03) !important; border: 1px solid #E2E8F0 !important; transition: transform 0.3s ease !important; }
-            .stat-box:hover { transform: translateY(-5px) !important; }
-            .stat-num { font-size: 2.2rem !important; font-weight: 800 !important; color: #0078FF !important; margin-bottom: 5px !important; }
-            .stat-lbl { font-size: 0.95rem !important; color: #64748B !important; font-weight: 500 !important; }
+# 3. Premium Cyber-Dark Lavender CSS Injector Framework
+st.markdown("""
+    <style>
+        /* Base Cyber Dark Canvas with Soft Purple Ambient Radial Glow */
+        .stApp, [data-testid="stAppViewContainer"] {
+            background-color: #0B0F19 !important;
+            background-image: radial-gradient(circle at 10% 20%, rgba(183, 148, 244, 0.05) 0%, transparent 40%), 
+                              radial-gradient(circle at 90% 80%, rgba(183, 148, 244, 0.05) 0%, transparent 40%) !important;
+            color: #F8FAFC !important;
+        }
+        
+        /* Sidebar Slate-Dark Polish */
+        [data-testid="stSidebar"], [data-testid="stSidebarContent"] { 
+            background-color: #0F172A !important; 
+            border-right: 1px solid #1E293B !important;
+        }
+        [data-testid="stSidebar"] *, [data-testid="stSidebar"] span { color: #F8FAFC !important; }
+        
+        /* Text Accent Styling Blocks */
+        .hero-title { font-size: 3.2rem !important; font-weight: 800 !important; color: #B794F4 !important; margin-bottom: 5px !important; text-shadow: 0 0 15px rgba(183, 148, 244, 0.2); }
+        .hero-subtitle { font-size: 2rem !important; font-weight: 700 !important; color: #F8FAFC !important; margin-bottom: 20px !important; }
+        .hero-desc { font-size: 1.15rem !important; color: #94A3B8 !important; line-height: 1.7 !important; margin-bottom: 30px !important; }
+        
+        /* Restored Dev Bio with Neon Lavender Left Border Accent */
+        .about-card { background: #1E293B !important; border-left: 5px solid #B794F4 !important; padding: 20px !important; border-radius: 12px !important; margin-bottom: 25px !important; box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important; }
+        
+        /* Interactive Counter Columns Layout */
+        .stat-box { background: #1E293B !important; padding: 25px !important; border-radius: 16px !important; text-align: center !important; border: 1px solid #334155 !important; transition: all 0.3s ease !important; }
+        .stat-box:hover { transform: translateY(-5px) !important; border-color: #B794F4 !important; box-shadow: 0 5px 15px rgba(183, 148, 244, 0.1) !important; }
+        .stat-num { font-size: 2.2rem !important; font-weight: 800 !important; color: #B794F4 !important; margin-bottom: 5px !important; }
+        .stat-lbl { font-size: 0.95rem !important; color: #94A3B8 !important; font-weight: 500 !important; }
 
-            /* Premium SaaS Feature Grid Cards */
-            .feature-card { background: #FFFFFF !important; padding: 30px 25px !important; border-radius: 20px !important; text-align: center !important; border: 1px solid #E2E8F0 !important; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02) !important; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; min-height: 250px !important; margin-bottom: 25px !important; }
-            .feature-card:hover { transform: translateY(-8px) !important; box-shadow: 0 20px 25px -5px rgba(0, 120, 255, 0.08) !important; border-color: #0078FF !important; }
-            .feature-icon { font-size: 2.5rem !important; margin-bottom: 15px !important; display: inline-block !important; padding: 10px !important; background: #F0F7FF !important; border-radius: 50% !important; width: 70px !important; height: 70px !important; line-height: 50px !important; }
-            .feature-title { font-size: 1.35rem !important; font-weight: 700 !important; color: #0F172A !important; margin-bottom: 10px !important; }
-            .feature-desc { font-size: 0.95rem !important; color: #64748B !important; line-height: 1.5 !important; }
-        </style>
-    """, unsafe_allow_html=True)
-else:
-    st.markdown("""
-        <style>
-            .stApp, [data-testid="stAppViewContainer"] {
-                background-color: #0B0F19 !important;
-                background-image: radial-gradient(circle at 10% 20%, rgba(0, 120, 255, 0.05) 0%, transparent 40%), 
-                                  radial-gradient(circle at 90% 80%, rgba(0, 120, 255, 0.05) 0%, transparent 40%) !important;
-                color: #F8FAFC !important;
-            }
-            [data-testid="stSidebar"], [data-testid="stSidebarContent"] { background-color: #0F172A !important; }
-            [data-testid="stSidebar"] *, [data-testid="stSidebar"] span { color: #F8FAFC !important; }
-            
-            .hero-title { font-size: 3.2rem !important; font-weight: 800 !important; color: #38BDF8 !important; margin-bottom: 5px !important; }
-            .hero-subtitle { font-size: 2rem !important; font-weight: 700 !important; color: #F8FAFC !important; margin-bottom: 20px !important; }
-            .hero-desc { font-size: 1.15rem !important; color: #94A3B8 !important; line-height: 1.7 !important; margin-bottom: 30px !important; }
-            
-            .about-card { background: #1E293B !important; border-left: 5px solid #38BDF8 !important; padding: 20px !important; border-radius: 12px !important; margin-bottom: 20px !important; }
-            
-            .stat-box { background: #1E293B !important; padding: 25px !important; border-radius: 16px !important; text-align: center !important; border: 1px solid #334155 !important; transition: transform 0.3s ease !important; }
-            .stat-box:hover { transform: translateY(-5px) !important; }
-            .stat-num { font-size: 2.2rem !important; font-weight: 800 !important; color: #38BDF8 !important; margin-bottom: 5px !important; }
-            .stat-lbl { font-size: 0.95rem !important; color: #94A3B8 !important; font-weight: 500 !important; }
-
-            .feature-card { background: #1E293B !important; padding: 30px 25px !important; border-radius: 20px !important; text-align: center !important; border: 1px solid #334155 !important; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; min-height: 250px !important; margin-bottom: 25px !important; }
-            .feature-card:hover { transform: translateY(-8px) !important; box-shadow: 0 20px 25px -5px rgba(56, 189, 248, 0.15) !important; border-color: #38BDF8 !important; }
-            .feature-icon { font-size: 2.5rem !important; margin-bottom: 15px !important; display: inline-block !important; padding: 10px !important; background: #0F172A !important; border-radius: 50% !important; width: 70px !important; height: 70px !important; line-height: 50px !important; }
-            .feature-title { font-size: 1.35rem !important; font-weight: 700 !important; color: #F8FAFC !important; margin-bottom: 10px !important; }
-            .feature-desc { font-size: 0.95rem !important; color: #94A3B8 !important; line-height: 1.5 !important; }
-        </style>
-    """, unsafe_allow_html=True)
+        /* Premium Lavender Interactive Feature Grid Matrix */
+        .feature-card { background: #1E293B !important; padding: 30px 25px !important; border-radius: 20px !important; text-align: center !important; border: 1px solid #334155 !important; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; min-height: 230px !important; margin-bottom: 15px !important; }
+        .feature-card:hover { transform: translateY(-8px) !important; box-shadow: 0 20px 25px -5px rgba(183, 148, 244, 0.12) !important; border-color: #B794F4 !important; }
+        .feature-icon { font-size: 2.5rem !important; margin-bottom: 15px !important; display: inline-block !important; padding: 10px !important; background: #2D1B4E !important; border-radius: 50% !important; width: 70px !important; height: 70px !important; line-height: 50px !important; }
+        .feature-title { font-size: 1.35rem !important; font-weight: 700 !important; color: #F8FAFC !important; margin-bottom: 10px !important; }
+        .feature-desc { font-size: 0.95rem !important; color: #94A3B8 !important; line-height: 1.5 !important; }
+        
+        /* Streamlit native UI core action buttons style alignment overrides */
+        [data-testid="stBaseButton-secondary"] {
+            background-color: #1E293B !important;
+            color: #F8FAFC !important;
+            border: 1px solid #334155 !important;
+            transition: all 0.2s ease !important;
+        }
+        [data-testid="stBaseButton-secondary"]:hover {
+            border-color: #B794F4 !important;
+            color: #B794F4 !important;
+            background-color: #2D1B4E !important;
+        }
+        [data-testid="stBaseButton-secondary"] * { color: inherit !important; }
+    </style>
+""", unsafe_allow_html=True)
 
 # 4. Page Routing Logic
 if st.session_state.current_page == "Dashboard Home":
@@ -137,7 +122,7 @@ if st.session_state.current_page == "Dashboard Home":
         # 📌 RESTORED DEVELOPER BIOGRAPHY BLOCK WITH PREMIUM DESIGN
         st.markdown("""
         <div class="about-card">
-            <span style="font-weight:700; font-size:1.1rem; display:block; margin-bottom:5px;">💡 About the Developer</span>
+            <span style="font-weight:700; font-size:1.1rem; display:block; margin-bottom:5px; color: #D6BCFA;">💡 About the Developer</span>
             <span style="font-size:0.98rem; opacity:0.9;">I am <strong>Jeet Pratap</strong>, a B.Tech CSE enthusiast passionate about engineering custom AI pipelines, context indexing engines, and modern dashboard frameworks.</span>
         </div>
         """, unsafe_allow_html=True)
@@ -145,7 +130,7 @@ if st.session_state.current_page == "Dashboard Home":
         # Core Launch Call-to-Actions Buttons
         btn_c1, btn_c2 = st.columns([1, 1])
         with btn_c1:
-            if st.button("🔥 Start Chat Now", key="hero_start_chat", use_container_width=True):
+            if st.button("🔮 Start Chat Now", key="hero_start_chat", use_container_width=True):
                 st.session_state.current_page = "AI Chat Thread"
                 st.rerun()
         with btn_c2:
@@ -157,7 +142,7 @@ if st.session_state.current_page == "Dashboard Home":
             
     st.markdown("<br><br>", unsafe_allow_html=True)
     
-    # --- PROMINENT COUNTER ROW DISPLAY (Matching Example Structure) ---
+    # --- PROMINENT COUNTER ROW DISPLAY ---
     s_col1, s_col2, s_col3 = st.columns(3)
     with s_col1:
         st.markdown('<div class="stat-box"><div class="stat-num">24/7</div><div class="stat-lbl">System Availability</div></div>', unsafe_allow_html=True)
@@ -167,16 +152,16 @@ if st.session_state.current_page == "Dashboard Home":
         st.markdown('<div class="stat-box"><div class="stat-num">99%</div><div class="stat-lbl">Response Base Accuracy</div></div>', unsafe_allow_html=True)
         
     st.markdown("<br><br><br>", unsafe_allow_html=True)
-    st.markdown("<h2 style='text-align: center; margin-bottom: 10px;'>Everything you need in one smart dashboard.</h2>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; color: gray; margin-bottom: 40px;'>Select a component module from below or use the sidebar layout controls to launch applications.</p>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center; margin-bottom: 10px; color: #D6BCFA;'>Everything you need in one smart dashboard.</h2>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #94A3B8; margin-bottom: 40px;'>Select a component module from below or use the sidebar layout controls to launch applications.</p>", unsafe_allow_html=True)
     
-    # --- ANIMATED premium 6-GRID CARDS PLATFORM ---
+    # --- INTERACTIVE LAVENDER FEATURE GRID CARDS PLATFORM ---
     grid1, grid2, grid3 = st.columns(3)
     
     with grid1:
         st.markdown("""
         <div class="feature-card">
-            <div class="feature-icon">💬</div>
+            <div class="feature-icon">🔮</div>
             <div class="feature-title">AI Chatbot</div>
             <div class="feature-desc">Ask questions instantly and handle continuous thread conversational topics seamlessly.</div>
         </div>
