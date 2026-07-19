@@ -89,7 +89,7 @@ def generate_pptx_stream():
     p2.font.color.rgb = SOFT_PURPLE
     p2.space_after = Pt(45)
     p3 = tf.add_paragraph()
-    p3.text = "Presented by: Jeet Pratap (B.Tech CSE Enthusiast)\nProject Mentorship: Nikhil Sharma"[cite: 1]
+    p3.text = "Presented by: Jeet Pratap (B.Tech CSE Enthusiast)\nProject Mentorship: Nikhil Sharma"
     p3.font.name = 'Helvetica'
     p3.font.size = Pt(16)
     p3.font.color.rgb = TEXT_LIGHT
@@ -156,14 +156,14 @@ def generate_pptx_stream():
     tf = tx_box.text_frame
     tf.word_wrap = True
     p1 = tf.paragraphs[0]
-    p1.text = "🔮 Module 01: AI Chatbot Engine"[cite: 1]
+    p1.text = "🔮 Module 01: AI Chatbot Engine"
     p1.font.name = 'Helvetica'
     p1.font.size = Pt(22)
     p1.font.bold = True
     p1.font.color.rgb = SOFT_PURPLE
     p1.space_after = Pt(4)
     p2 = tf.add_paragraph()
-    p2.text = "Processes real-time multi-turn strings using streaming token responses[cite: 1]. Engineered to handle conversational threads seamlessly, enabling rapid code evaluation and query debugging formats[cite: 1]."
+    p2.text = "Processes real-time multi-turn strings using streaming token responses. Engineered to handle conversational threads seamlessly, enabling rapid code evaluation and query debugging formats."
     p2.font.name = 'Helvetica'
     p2.font.size = Pt(16)
     p2.font.color.rgb = TEXT_LIGHT
@@ -176,7 +176,7 @@ def generate_pptx_stream():
     p3.font.color.rgb = SOFT_PURPLE
     p3.space_after = Pt(4)
     p4 = tf.add_paragraph()
-    p4.text = "Maps administrative university guidelines, deadlines, and tracking pipelines contextually, giving students instant clarity on university compliance constraints[cite: 1]."
+    p4.text = "Maps administrative university guidelines, deadlines, and tracking pipelines contextually, giving students instant clarity on university compliance constraints."
     p4.font.name = 'Helvetica'
     p4.font.size = Pt(16)
     p4.font.color.rgb = TEXT_LIGHT
@@ -196,7 +196,7 @@ def generate_pptx_stream():
     p1.font.color.rgb = SOFT_PURPLE
     p1.space_after = Pt(4)
     p2 = tf.add_paragraph()
-    p2.text = "Runs direct, optimized text indexing queries across regulatory college documentation, manuals, and rulebooks to deliver context-grounded data points with absolute integrity[cite: 1]."
+    p2.text = "Runs direct, optimized text indexing queries across regulatory college documentation, manuals, and rulebooks to deliver context-grounded data points with absolute integrity."
     p2.font.name = 'Helvetica'
     p2.font.size = Pt(16)
     p2.font.color.rgb = TEXT_LIGHT
@@ -229,7 +229,7 @@ def generate_pptx_stream():
     p1.font.color.rgb = SOFT_PURPLE
     p1.space_after = Pt(4)
     p2 = tf.add_paragraph()
-    p2.text = "Ingests extensive study text files or syllabi parameters[cite: 1], utilizing contextual token extraction models to condense massive reference files into high-yield atomic summary blocks[cite: 1]."
+    p2.text = "Ingests extensive study text files or syllabi parameters, utilizing contextual token extraction models to condense massive reference files into high-yield atomic summary blocks."
     p2.font.name = 'Helvetica'
     p2.font.size = Pt(16)
     p2.font.color.rgb = TEXT_LIGHT
@@ -242,7 +242,7 @@ def generate_pptx_stream():
     p3.font.color.rgb = SOFT_PURPLE
     p3.space_after = Pt(4)
     p4 = tf.add_paragraph()
-    p4.text = "Converts vocal audio input strings into highly coherent text maps to allow effortless hands-free query tracking right inside an agile dashboard UI viewport[cite: 1]."
+    p4.text = "Converts vocal audio input strings into highly coherent text maps to allow effortless hands-free query tracking right inside an agile dashboard UI viewport."
     p4.font.name = 'Helvetica'
     p4.font.size = Pt(16)
     p4.font.color.rgb = TEXT_LIGHT
@@ -255,14 +255,14 @@ def generate_pptx_stream():
     tf = tx_box.text_frame
     tf.word_wrap = True
     p1 = tf.paragraphs[0]
-    p1.text = "👔 Project Mentorship: Nikhil Sharma"[cite: 1]
+    p1.text = "👔 Project Mentorship: Nikhil Sharma"
     p1.font.name = 'Helvetica'
     p1.font.size = Pt(22)
     p1.font.bold = True
     p1.font.color.rgb = LAVENDER
     p1.space_after = Pt(4)
     p2 = tf.add_paragraph()
-    p2.text = "Sincere architectural gratitude is extended to Nikhil Sharma for guiding core contextual parsing parameters, state machine logic boundaries, and general verification mechanics."[cite: 1]
+    p2.text = "Sincere architectural gratitude is extended to Nikhil Sharma for guiding core contextual parsing parameters, state machine logic boundaries, and general verification mechanics."
     p2.font.name = 'Helvetica'
     p2.font.size = Pt(16)
     p2.font.color.rgb = TEXT_LIGHT
@@ -288,7 +288,7 @@ def generate_pptx_stream():
     tf = tx_box.text_frame
     tf.word_wrap = True
     bullets_f = [
-        "Voice Pipeline Integration: Deploying low-latency native vocal query loops[cite: 1].",
+        "Voice Pipeline Integration: Deploying low-latency native vocal query loops.",
         "Deep Vector Processing: Scaling data storage matrices to ingest dense binary datasets.",
         "Performance Tracking Modules: Charting comprehensive query speed metrics and performance states.",
         "Production Scale Launch: Final routing to support high concurrent session contexts."
@@ -443,7 +443,6 @@ if st.session_state.current_page == "Dashboard Home":
                 st.session_state.current_page = "AI Chat Thread"
                 st.rerun()
         with btn_c2:
-            # 🎯 DIRECT LIVE POWERPOINT BINARY DOWNLOAD COMPONENT MODULE
             with st.spinner("Preparing PowerPoint file..."):
                 ppt_data = generate_pptx_stream()
             st.download_button(
