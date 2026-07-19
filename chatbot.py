@@ -7,13 +7,17 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def init_chatbot(force_rebuild=False, custom_pdf_text=None):
+    """
+    Initializes the Google GenAI Client infrastructure securely using 
+    Streamlit secrets or local environment variables.
+    """
     api_key = st.secrets.get("GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY")
     
     if not api_key:
         st.error("🔑 Missing Gemini API Key. Please configure GEMINI_API_KEY in your Streamlit Secrets.")
         st.stop()
         
-    # Clean up client initialization so it handles API keys correctly out of the box
+    # Initialize the modern developer client setup
     if "genai_client" not in st.session_state or force_rebuild:
         st.session_state.genai_client = genai.Client(api_key=api_key)
 
@@ -54,9 +58,9 @@ def get_ai_stream_response(current_prompt):
         )
     
     try:
-        # 3. Send the entire back-and-forth history to the API
+        # 3. Send the entire back-and-forth history using the standardized stable flash engine
         response_stream = client.models.generate_content_stream(
-            model='gemini-2.5-flash',  # Running on the latest ultra-fast stable flash engine
+            model='gemini-2.5-flash',
             contents=formatted_contents
         )
         
@@ -65,6 +69,6 @@ def get_ai_stream_response(current_prompt):
                 yield chunk.text
                 
     except Exception as e:
-        # Log to console so it doesn't break the user UI flow completely
+        # Log to server console while keeping UI clean
         print(f"Internal API Error Tracked: {str(e)}")
         yield f"⚠️ API Error Encountered: {str(e)}"
