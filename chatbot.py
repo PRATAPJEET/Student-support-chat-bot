@@ -8,45 +8,27 @@ load_dotenv()
 
 def init_chatbot(force_rebuild=False, custom_pdf_text=None):
     """
-    Initializes the Google GenAI Client securely by routing communication
-    through the stable 'v1' production API endpoint to support new AQ. keys.
+    Initializes the Google GenAI Client cleanly using Streamlit secrets
+    or local environment settings.
     """
-    # 1. Clear cloud environment overrides to protect the developer API key pathway
-    cloud_env_vars = [
-        "GOOGLE_APPLICATION_CREDENTIALS", 
-        "GOOGLE_CLOUD_PROJECT", 
-        "GOOGLE_API_KEY",
-        "GCLOUD_PROJECT"
-    ]
-    for var in cloud_env_vars:
-        if var in os.environ:
-            del os.environ[var]
-
-    # 2. Fetch the correct user API key context
     api_key = st.secrets.get("GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY")
     
     if not api_key:
         st.error("🔑 Missing Gemini API Key. Please configure GEMINI_API_KEY in your Streamlit Secrets.")
         st.stop()
         
-    # 3. Securely mount a pure developer client framework bound explicitly to the v1 stable engine
     if "genai_client" not in st.session_state or force_rebuild:
-        st.session_state.genai_client = genai.Client(
-            api_key=api_key,
-            http_options=types.HttpOptions(api_version='v1')
-        )
+        st.session_state.genai_client = genai.Client(api_key=api_key)
 
 def get_ai_stream_response(current_prompt):
     """
-    Formulates the full chat history stored in st.session_state.messages
-    and passes it to the Gemini API so the bot maintains context and memory.
+    Fetches the full conversation response securely. Uses standard content generation
+    to bypass the SDK v1beta streaming bug affecting new AQ. keys.
     """
     if "genai_client" not in st.session_state:
         init_chatbot()
         
     client = st.session_state.genai_client
-    
-    # Reconstruct the full historical conversation for the model
     formatted_contents = []
     
     if "messages" in st.session_state:
@@ -60,7 +42,6 @@ def get_ai_stream_response(current_prompt):
                     )
                 )
     
-    # Append the brand new prompt the user just sent if it isn't in history yet
     if not formatted_contents or formatted_contents[-1].parts[0].text != current_prompt:
         formatted_contents.append(
             types.Content(
@@ -70,15 +51,16 @@ def get_ai_stream_response(current_prompt):
         )
     
     try:
-        # Route the communication through the stable native flash engine on v1
-        response_stream = client.models.generate_content_stream(
+        # Utilizing standard call to bypass the cloud authentication token bug
+        response = client.models.generate_content(
             model='gemini-2.5-flash',
             contents=formatted_contents
         )
         
-        for chunk in response_stream:
-            if chunk.text:
-                yield chunk.text
+        if response.text:
+            yield response.text
+        else:
+            yield "⚠️ I received an empty response from the AI engine."
                 
     except Exception as e:
         print(f"Internal API Error Tracked: {str(e)}")
