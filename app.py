@@ -8,7 +8,7 @@ from pptx import Presentation
 from pptx.util import Inches, Pt
 from pptx.dml.color import RGBColor
 from pptx.enum.text import PP_ALIGN
-import PyPDF2  # Added for the PDF Notes Summarizer
+import PyPDF2
 
 # 1. Page Configuration Setup
 st.set_page_config(
@@ -52,16 +52,6 @@ def generate_pptx_stream():
         fill = slide.background.fill
         fill.solid()
         fill.fore_color.rgb = BG_DARK
-
-    def add_slide_header(slide, title_text):
-        tx_box = slide.shapes.add_textbox(Inches(0.75), Inches(0.5), Inches(11.833), Inches(1.0))
-        tf = tx_box.text_frame
-        p = tf.paragraphs[0]
-        p.text = title_text
-        p.font.name = 'Helvetica'
-        p.font.size = Pt(36)
-        p.font.bold = True
-        p.font.color.rgb = LAVENDER
 
     blank_layout = prs.slide_layouts[6]
 
@@ -125,6 +115,15 @@ st.markdown("""
         .hero-title { font-size: 3.2rem !important; font-weight: 800 !important; color: #B794F4 !important; margin-bottom: 5px !important; }
         .hero-subtitle { font-size: 2rem !important; font-weight: 700 !important; color: #F8FAFC !important; margin-bottom: 20px !important; }
         .hero-desc { font-size: 1.15rem !important; color: #94A3B8 !important; line-height: 1.7 !important; margin-bottom: 30px !important; }
+        
+        .about-card { 
+            background: #1E293B !important; 
+            border-left: 5px solid #B794F4 !important; 
+            padding: 20px !important; 
+            border-radius: 12px !important; 
+            margin-bottom: 25px !important; 
+        }
+        
         .feature-card { background: #1E293B !important; padding: 30px 25px !important; border-radius: 20px !important; text-align: center !important; border: 1px solid #334155 !important; margin-bottom: 15px !important; transition: all 0.3s; }
         .feature-card:hover { transform: translateY(-5px); border-color: #B794F4 !important; }
         .feature-icon { font-size: 2.5rem !important; margin-bottom: 15px !important; }
@@ -141,6 +140,14 @@ if st.session_state.current_page == "Dashboard Home":
         st.markdown('<div class="hero-subtitle">Your Personal AI Learning Companion</div>', unsafe_allow_html=True)
         st.markdown('<div class="hero-desc">Learn faster with an intelligent AI assistant framework that can answer your academic questions, summarize notes, generate quizzes, and prepare smart study plans.</div>', unsafe_allow_html=True)
         
+        # RESTORED: About Me Card
+        st.markdown("""
+        <div class="about-card">
+            <span style="font-weight:700; font-size:1.1rem; display:block; margin-bottom:5px; color: #D6BCFA;">💡 About Me</span>
+            <span style="font-size:0.98rem; opacity:0.9;">I am <strong>Jeet Pratap</strong>, a B.Tech CSE enthusiast passionate about engineering custom AI pipelines, context indexing engines, and modern UI dashboard frameworks.</span>
+        </div>
+        """, unsafe_allow_html=True)
+        
         btn_c1, btn_c2 = st.columns([1, 1])
         with btn_c1:
             if st.button("🔮 Start Chat Now", use_container_width=True):
@@ -156,27 +163,63 @@ if st.session_state.current_page == "Dashboard Home":
             st_lottie(lottie_robot, height=380, speed=1.2, loop=True, key="premium_robot")
             
     st.markdown("<br><br><h2 style='text-align: center; color: #D6BCFA;'>Modules</h2>", unsafe_allow_html=True)
+    
+    # Grid Row 1 (Modules 1-3)
     grid1, grid2, grid3 = st.columns(3)
     
     with grid1:
         st.markdown('<div class="feature-card"><div class="feature-icon">🔮</div><div class="feature-title">AI Chatbot</div></div>', unsafe_allow_html=True)
-        if st.button("Open AI Chat Thread", use_container_width=True): st.session_state.current_page, st.rerun() = "AI Chat Thread", None
+        if st.button("Open AI Chat Thread", key="go_chat", use_container_width=True): 
+            st.session_state.current_page = "AI Chat Thread"
+            st.rerun()
+            
     with grid2:
         st.markdown('<div class="feature-card"><div class="feature-icon">🤝</div><div class="feature-title">Success Advisor</div></div>', unsafe_allow_html=True)
-        if st.button("Open Success Pipeline", use_container_width=True): st.session_state.current_page, st.rerun() = "Student Success Support", None
+        if st.button("Open Success Pipeline", key="go_success", use_container_width=True): 
+            st.session_state.current_page = "Student Success Support"
+            st.rerun()
+            
     with grid3:
         st.markdown('<div class="feature-card"><div class="feature-icon">🏢</div><div class="feature-title">Knowledge System</div></div>', unsafe_allow_html=True)
-        if st.button("Open Institutional Base", use_container_width=True): st.session_state.current_page, st.rerun() = "Campus Knowledge Base", None
+        if st.button("Open Institutional Base", key="go_kb", use_container_width=True): 
+            st.session_state.current_page = "Campus Knowledge Base"
+            st.rerun()
+
+    st.markdown("<br>", unsafe_allow_html=True)
+    
+    # RESTORED: Grid Row 2 (Modules 4-6)
+    grid4, grid5, grid6 = st.columns(3)
+    
+    with grid4:
+        st.markdown('<div class="feature-card"><div class="feature-icon">💻</div><div class="feature-title">CS Programming TA</div></div>', unsafe_allow_html=True)
+        if st.button("Open Coding TA Engine", key="go_cs", use_container_width=True): 
+            st.session_state.current_page = "CS Programming Help"
+            st.rerun()
+            
+    with grid5:
+        st.markdown('<div class="feature-card"><div class="feature-icon">📄</div><div class="feature-title">Notes Summarizer</div></div>', unsafe_allow_html=True)
+        if st.button("Open Document Processor", key="go_pdf", use_container_width=True): 
+            st.session_state.current_page = "Chat with PDF Notes"
+            st.rerun()
+            
+    with grid6:
+        st.markdown('<div class="feature-card"><div class="feature-icon">🎙️</div><div class="feature-title">Audio Assistant</div></div>', unsafe_allow_html=True)
+        if st.button("Open Voice Simulator", key="go_voice", use_container_width=True): 
+            st.session_state.current_page = "Voice Audio Assistant"
+            st.rerun()
 
 # --- PAGE 1: AI Chat Thread ---
 elif st.session_state.current_page == "AI Chat Thread":
     st.title("💬 General AI Chat Thread")
-    if "messages" not in st.session_state: st.session_state.messages = []
+    if "messages" not in st.session_state: 
+        st.session_state.messages = []
     for msg in st.session_state.messages:
-        with st.chat_message(msg["role"]): st.markdown(msg["content"])
+        with st.chat_message(msg["role"]): 
+            st.markdown(msg["content"])
         
     if prompt := st.chat_input("Ask anything..."):
-        with st.chat_message("user"): st.markdown(prompt)
+        with st.chat_message("user"): 
+            st.markdown(prompt)
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("assistant"):
             placeholder = st.empty()
@@ -189,18 +232,20 @@ elif st.session_state.current_page == "AI Chat Thread":
 # --- PAGE 2: Student Success Support ---
 elif st.session_state.current_page == "Student Success Support":
     st.title("🤝 Student Success Advisor")
-    st.info("I am optimized to help you with college pipelines, deadlines, and mental health resources.")
-    if "success_msgs" not in st.session_state: st.session_state.success_msgs = []
+    st.info("I am optimized to help you with college pipelines, deadlines, and tracking resources.")
+    if "success_msgs" not in st.session_state: 
+        st.session_state.success_msgs = []
     
     for msg in st.session_state.success_msgs:
-        with st.chat_message(msg["role"]): st.markdown(msg["content"])
+        with st.chat_message(msg["role"]): 
+            st.markdown(msg["content"])
         
     if prompt := st.chat_input("Ask about university guidelines or deadlines..."):
-        with st.chat_message("user"): st.markdown(prompt)
+        with st.chat_message("user"): 
+            st.markdown(prompt)
         st.session_state.success_msgs.append({"role": "user", "content": prompt})
         
-        # Wrapping prompt with context instructions
-        context_prompt = f"As a highly empathetic and knowledgeable University Student Success Advisor, answer this: {prompt}"
+        context_prompt = f"As a highly knowledgeable University Student Success Advisor, answer this: {prompt}"
         with st.chat_message("assistant"):
             placeholder = st.empty()
             resp = ""
@@ -213,16 +258,19 @@ elif st.session_state.current_page == "Student Success Support":
 elif st.session_state.current_page == "CS Programming Help":
     st.title("💻 CS Programming Assistant TA")
     st.info("Paste your broken code or logic questions here. I will help you debug!")
-    if "cs_msgs" not in st.session_state: st.session_state.cs_msgs = []
+    if "cs_msgs" not in st.session_state: 
+        st.session_state.cs_msgs = []
     
     for msg in st.session_state.cs_msgs:
-        with st.chat_message(msg["role"]): st.markdown(msg["content"])
+        with st.chat_message(msg["role"]): 
+            st.markdown(msg["content"])
         
-    if prompt := st.chat_input("Paste Python, Java, or C++ code here..."):
-        with st.chat_message("user"): st.markdown(prompt)
+    if prompt := st.chat_input("Paste code here..."):
+        with st.chat_message("user"): 
+            st.markdown(prompt)
         st.session_state.cs_msgs.append({"role": "user", "content": prompt})
         
-        context_prompt = f"Act as an expert Computer Science Teaching Assistant. Evaluate this code/query, explain the bugs, and provide corrected code blocks: {prompt}"
+        context_prompt = f"Act as an expert Computer Science Teaching Assistant. Evaluate this query, explain bugs, and provide corrected code: {prompt}"
         with st.chat_message("assistant"):
             placeholder = st.empty()
             resp = ""
@@ -235,16 +283,19 @@ elif st.session_state.current_page == "CS Programming Help":
 elif st.session_state.current_page == "Campus Knowledge Base":
     st.title("🏢 Campus Knowledge Base")
     st.info("Query standard institutional rules, library hours, and compliance policies.")
-    if "kb_msgs" not in st.session_state: st.session_state.kb_msgs = []
+    if "kb_msgs" not in st.session_state: 
+        st.session_state.kb_msgs = []
     
     for msg in st.session_state.kb_msgs:
-        with st.chat_message(msg["role"]): st.markdown(msg["content"])
+        with st.chat_message(msg["role"]): 
+            st.markdown(msg["content"])
         
     if prompt := st.chat_input("Search the campus index..."):
-        with st.chat_message("user"): st.markdown(prompt)
+        with st.chat_message("user"): 
+            st.markdown(prompt)
         st.session_state.kb_msgs.append({"role": "user", "content": prompt})
         
-        context_prompt = f"Act as a strict, formal Campus Knowledge Base Indexer. Provide clear, policy-based answers to this query: {prompt}"
+        context_prompt = f"Act as a formal Campus Knowledge Base Indexer. Provide clear, policy-based answers: {prompt}"
         with st.chat_message("assistant"):
             placeholder = st.empty()
             resp = ""
@@ -271,12 +322,15 @@ elif st.session_state.current_page == "Chat with PDF Notes":
                 st.session_state.pdf_name = uploaded_file.name
                 st.success("✅ Document processed successfully!")
                 
-        if "pdf_msgs" not in st.session_state: st.session_state.pdf_msgs = []
+        if "pdf_msgs" not in st.session_state: 
+            st.session_state.pdf_msgs = []
         for msg in st.session_state.pdf_msgs:
-            with st.chat_message(msg["role"]): st.markdown(msg["content"])
+            with st.chat_message(msg["role"]): 
+                st.markdown(msg["content"])
             
         if prompt := st.chat_input("Ask a question about the uploaded document..."):
-            with st.chat_message("user"): st.markdown(prompt)
+            with st.chat_message("user"): 
+                st.markdown(prompt)
             st.session_state.pdf_msgs.append({"role": "user", "content": prompt})
             
             context_prompt = f"Based strictly on the following document text, answer the user's question.\n\nDocument Text:\n{st.session_state.pdf_text[:5000]}...\n\nUser Question: {prompt}"
@@ -292,10 +346,10 @@ elif st.session_state.current_page == "Chat with PDF Notes":
 # --- PAGE 6: Voice Audio Assistant ---
 elif st.session_state.current_page == "Voice Audio Assistant":
     st.title("🎙️ Voice Audio Assistant")
-    st.info("Record a voice query right from your browser, and the AI will process your spoken context.")
+    st.info("Record a voice query right from your browser.")
     
     audio_value = st.audio_input("Record your question here")
     
     if audio_value:
-        st.success("✅ Audio captured successfully! (Note: Gemini multimodal voice routing requires file upload logic which is coming in v2. For now, use the text chatbots for processing).")
+        st.success("✅ Audio captured successfully! You can review your audio below.")
         st.audio(audio_value)
