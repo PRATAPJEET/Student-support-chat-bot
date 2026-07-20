@@ -215,21 +215,23 @@ elif st.session_state.current_page == "AI Chat Thread":
         st.session_state.messages = []
     for msg in st.session_state.messages:
         with st.chat_message(msg["role"]): 
-            st.markdown(msg["content"])
+            # Check structure type to safely render loaded content strings
+            content_str = msg["parts"][0] if isinstance(msg["parts"], list) else msg["parts"]
+            st.markdown(content_str)
         
     if prompt := st.chat_input("Ask anything..."):
         with st.chat_message("user"): 
             st.markdown(prompt)
-        st.session_state.messages.append({"role": "user", "content": prompt})
+        # Store using parts directly to align context schemas
+        st.session_state.messages.append({"role": "user", "parts": [prompt]})
         with st.chat_message("assistant"):
             placeholder = st.empty()
             resp = ""
-            # FIXED: Formatted layout context and passed all 3 required arguments
-            formatted_history = [{"role": m["role"], "parts": [m["content"]]} for m in st.session_state.messages[:-1]]
-            for chunk in get_ai_stream_response(client, formatted_history, prompt):
+            # Safely drop the last appends out of historical data passing layers
+            for chunk in get_ai_stream_response(client, st.session_state.messages[:-1], prompt):
                 resp += chunk
                 placeholder.markdown(resp)
-        st.session_state.messages.append({"role": "assistant", "content": resp})
+        st.session_state.messages.append({"role": "assistant", "parts": [resp]})
 
 # --- PAGE 2: Student Success Support ---
 elif st.session_state.current_page == "Student Success Support":
@@ -240,22 +242,22 @@ elif st.session_state.current_page == "Student Success Support":
     
     for msg in st.session_state.success_msgs:
         with st.chat_message(msg["role"]): 
-            st.markdown(msg["content"])
+            content_str = msg["parts"][0] if isinstance(msg["parts"], list) else msg["parts"]
+            st.markdown(content_str)
         
     if prompt := st.chat_input("Ask about university guidelines or deadlines..."):
         with st.chat_message("user"): 
             st.markdown(prompt)
-        st.session_state.success_msgs.append({"role": "user", "content": prompt})
+        st.session_state.success_msgs.append({"role": "user", "parts": [prompt]})
         
         context_prompt = f"As a highly knowledgeable University Student Success Advisor, answer this: {prompt}"
         with st.chat_message("assistant"):
             placeholder = st.empty()
             resp = ""
-            formatted_history = [{"role": m["role"], "parts": [m["content"]]} for m in st.session_state.success_msgs[:-1]]
-            for chunk in get_ai_stream_response(client, formatted_history, context_prompt):
+            for chunk in get_ai_stream_response(client, st.session_state.success_msgs[:-1], context_prompt):
                 resp += chunk
                 placeholder.markdown(resp)
-        st.session_state.success_msgs.append({"role": "assistant", "content": resp})
+        st.session_state.success_msgs.append({"role": "assistant", "parts": [resp]})
 
 # --- PAGE 3: CS Programming Help ---
 elif st.session_state.current_page == "CS Programming Help":
@@ -266,22 +268,22 @@ elif st.session_state.current_page == "CS Programming Help":
     
     for msg in st.session_state.cs_msgs:
         with st.chat_message(msg["role"]): 
-            st.markdown(msg["content"])
+            content_str = msg["parts"][0] if isinstance(msg["parts"], list) else msg["parts"]
+            st.markdown(content_str)
         
     if prompt := st.chat_input("Paste code here..."):
         with st.chat_message("user"): 
             st.markdown(prompt)
-        st.session_state.cs_msgs.append({"role": "user", "content": prompt})
+        st.session_state.cs_msgs.append({"role": "user", "parts": [prompt]})
         
         context_prompt = f"Act as an expert Computer Science Teaching Assistant. Evaluate this query, explain bugs, and provide corrected code: {prompt}"
         with st.chat_message("assistant"):
             placeholder = st.empty()
             resp = ""
-            formatted_history = [{"role": m["role"], "parts": [m["content"]]} for m in st.session_state.cs_msgs[:-1]]
-            for chunk in get_ai_stream_response(client, formatted_history, context_prompt):
+            for chunk in get_ai_stream_response(client, st.session_state.cs_msgs[:-1], context_prompt):
                 resp += chunk
                 placeholder.markdown(resp)
-        st.session_state.cs_msgs.append({"role": "assistant", "content": resp})
+        st.session_state.cs_msgs.append({"role": "assistant", "parts": [resp]})
 
 # --- PAGE 4: Campus Knowledge Base ---
 elif st.session_state.current_page == "Campus Knowledge Base":
@@ -292,22 +294,22 @@ elif st.session_state.current_page == "Campus Knowledge Base":
     
     for msg in st.session_state.kb_msgs:
         with st.chat_message(msg["role"]): 
-            st.markdown(msg["content"])
+            content_str = msg["parts"][0] if isinstance(msg["parts"], list) else msg["parts"]
+            st.markdown(content_str)
         
     if prompt := st.chat_input("Search the campus index..."):
         with st.chat_message("user"): 
             st.markdown(prompt)
-        st.session_state.kb_msgs.append({"role": "user", "content": prompt})
+        st.session_state.kb_msgs.append({"role": "user", "parts": [prompt]})
         
         context_prompt = f"Act as a formal Campus Knowledge Base Indexer. Provide clear, policy-based answers: {prompt}"
         with st.chat_message("assistant"):
             placeholder = st.empty()
             resp = ""
-            formatted_history = [{"role": m["role"], "parts": [m["content"]]} for m in st.session_state.kb_msgs[:-1]]
-            for chunk in get_ai_stream_response(client, formatted_history, context_prompt):
+            for chunk in get_ai_stream_response(client, st.session_state.kb_msgs[:-1], context_prompt):
                 resp += chunk
                 placeholder.markdown(resp)
-        st.session_state.kb_msgs.append({"role": "assistant", "content": resp})
+        st.session_state.kb_msgs.append({"role": "assistant", "parts": [resp]})
 
 # --- PAGE 5: Chat with PDF Notes ---
 elif st.session_state.current_page == "Chat with PDF Notes":
@@ -331,23 +333,23 @@ elif st.session_state.current_page == "Chat with PDF Notes":
             st.session_state.pdf_msgs = []
         for msg in st.session_state.pdf_msgs:
             with st.chat_message(msg["role"]): 
-                st.markdown(msg["content"])
+                content_str = msg["parts"][0] if isinstance(msg["parts"], list) else msg["parts"]
+                st.markdown(content_str)
             
         if prompt := st.chat_input("Ask a question about the uploaded document..."):
             with st.chat_message("user"): 
                 st.markdown(prompt)
-            st.session_state.pdf_msgs.append({"role": "user", "content": prompt})
+            st.session_state.pdf_msgs.append({"role": "user", "parts": [prompt]})
             
             context_prompt = f"Based strictly on the following document text, answer the user's question.\n\nDocument Text:\n{st.session_state.pdf_text[:5000]}...\n\nUser Question: {prompt}"
             
             with st.chat_message("assistant"):
                 placeholder = st.empty()
                 resp = ""
-                formatted_history = [{"role": m["role"], "parts": [m["content"]]} for m in st.session_state.pdf_msgs[:-1]]
-                for chunk in get_ai_stream_response(client, formatted_history, context_prompt):
+                for chunk in get_ai_stream_response(client, st.session_state.pdf_msgs[:-1], context_prompt):
                     resp += chunk
                     placeholder.markdown(resp)
-            st.session_state.pdf_msgs.append({"role": "assistant", "content": resp})
+            st.session_state.pdf_msgs.append({"role": "assistant", "parts": [resp]})
 
 # --- PAGE 6: Voice Audio Assistant ---
 elif st.session_state.current_page == "Voice Audio Assistant":
