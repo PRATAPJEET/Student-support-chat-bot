@@ -18,8 +18,8 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Initialize chatbot credentials early
-init_chatbot()
+# Initialize chatbot credentials early and save to client
+client = init_chatbot()
 
 # Helper function to fetch asset animations safely
 def load_lottie_url(url: str):
@@ -140,7 +140,7 @@ if st.session_state.current_page == "Dashboard Home":
         st.markdown('<div class="hero-subtitle">Your Personal AI Learning Companion</div>', unsafe_allow_html=True)
         st.markdown('<div class="hero-desc">Learn faster with an intelligent AI assistant framework that can answer your academic questions, summarize notes, generate quizzes, and prepare smart study plans.</div>', unsafe_allow_html=True)
         
-        # RESTORED: About Me Card
+        # About Me Card
         st.markdown("""
         <div class="about-card">
             <span style="font-weight:700; font-size:1.1rem; display:block; margin-bottom:5px; color: #D6BCFA;">💡 About Me</span>
@@ -187,7 +187,7 @@ if st.session_state.current_page == "Dashboard Home":
 
     st.markdown("<br>", unsafe_allow_html=True)
     
-    # RESTORED: Grid Row 2 (Modules 4-6)
+    # Grid Row 2 (Modules 4-6)
     grid4, grid5, grid6 = st.columns(3)
     
     with grid4:
@@ -224,7 +224,9 @@ elif st.session_state.current_page == "AI Chat Thread":
         with st.chat_message("assistant"):
             placeholder = st.empty()
             resp = ""
-            for chunk in get_ai_stream_response(prompt):
+            # FIXED: Formatted layout context and passed all 3 required arguments
+            formatted_history = [{"role": m["role"], "parts": [m["content"]]} for m in st.session_state.messages[:-1]]
+            for chunk in get_ai_stream_response(client, formatted_history, prompt):
                 resp += chunk
                 placeholder.markdown(resp)
         st.session_state.messages.append({"role": "assistant", "content": resp})
@@ -249,7 +251,8 @@ elif st.session_state.current_page == "Student Success Support":
         with st.chat_message("assistant"):
             placeholder = st.empty()
             resp = ""
-            for chunk in get_ai_stream_response(context_prompt):
+            formatted_history = [{"role": m["role"], "parts": [m["content"]]} for m in st.session_state.success_msgs[:-1]]
+            for chunk in get_ai_stream_response(client, formatted_history, context_prompt):
                 resp += chunk
                 placeholder.markdown(resp)
         st.session_state.success_msgs.append({"role": "assistant", "content": resp})
@@ -274,7 +277,8 @@ elif st.session_state.current_page == "CS Programming Help":
         with st.chat_message("assistant"):
             placeholder = st.empty()
             resp = ""
-            for chunk in get_ai_stream_response(context_prompt):
+            formatted_history = [{"role": m["role"], "parts": [m["content"]]} for m in st.session_state.cs_msgs[:-1]]
+            for chunk in get_ai_stream_response(client, formatted_history, context_prompt):
                 resp += chunk
                 placeholder.markdown(resp)
         st.session_state.cs_msgs.append({"role": "assistant", "content": resp})
@@ -299,7 +303,8 @@ elif st.session_state.current_page == "Campus Knowledge Base":
         with st.chat_message("assistant"):
             placeholder = st.empty()
             resp = ""
-            for chunk in get_ai_stream_response(context_prompt):
+            formatted_history = [{"role": m["role"], "parts": [m["content"]]} for m in st.session_state.kb_msgs[:-1]]
+            for chunk in get_ai_stream_response(client, formatted_history, context_prompt):
                 resp += chunk
                 placeholder.markdown(resp)
         st.session_state.kb_msgs.append({"role": "assistant", "content": resp})
@@ -338,7 +343,8 @@ elif st.session_state.current_page == "Chat with PDF Notes":
             with st.chat_message("assistant"):
                 placeholder = st.empty()
                 resp = ""
-                for chunk in get_ai_stream_response(context_prompt):
+                formatted_history = [{"role": m["role"], "parts": [m["content"]]} for m in st.session_state.pdf_msgs[:-1]]
+                for chunk in get_ai_stream_response(client, formatted_history, context_prompt):
                     resp += chunk
                     placeholder.markdown(resp)
             st.session_state.pdf_msgs.append({"role": "assistant", "content": resp})
