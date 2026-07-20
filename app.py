@@ -299,8 +299,7 @@ elif st.session_state.current_page == "Campus Knowledge Base":
         with st.chat_message("assistant"):
             placeholder = st.empty()
             resp = ""
-            for chunk in get_ai_stream_response(context_prompt):
-                resp += chunk
+for chunk in get_ai_stream_response(client, st.session_state.messages, prompt):                resp += chunk
                 placeholder.markdown(resp)
         st.session_state.kb_msgs.append({"role": "assistant", "content": resp})
 
@@ -352,4 +351,4 @@ elif st.session_state.current_page == "Voice Audio Assistant":
     
     if audio_value:
         st.success("✅ Audio captured successfully! You can review your audio below.")
-        st.audio(audio_value)
+        st.audio
