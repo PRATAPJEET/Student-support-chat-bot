@@ -215,19 +215,16 @@ elif st.session_state.current_page == "AI Chat Thread":
         st.session_state.messages = []
     for msg in st.session_state.messages:
         with st.chat_message(msg["role"]): 
-            # Check structure type to safely render loaded content strings
             content_str = msg["parts"][0] if isinstance(msg["parts"], list) else msg["parts"]
             st.markdown(content_str)
         
     if prompt := st.chat_input("Ask anything..."):
         with st.chat_message("user"): 
             st.markdown(prompt)
-        # Store using parts directly to align context schemas
         st.session_state.messages.append({"role": "user", "parts": [prompt]})
         with st.chat_message("assistant"):
             placeholder = st.empty()
             resp = ""
-            # Safely drop the last appends out of historical data passing layers
             for chunk in get_ai_stream_response(client, st.session_state.messages[:-1], prompt):
                 resp += chunk
                 placeholder.markdown(resp)

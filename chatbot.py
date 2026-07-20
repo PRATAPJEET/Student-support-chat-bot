@@ -1,5 +1,6 @@
 import streamlit as st
 from google import genai
+from google.genai import types
 import google.genai.errors as errors
 from dotenv import load_dotenv
 import os
@@ -18,21 +19,43 @@ def init_chatbot():
 def get_ai_stream_response(client, prompt_history, user_message):
     """
     Sends conversational context to the Gemini engine and handles streaming text feedback.
-    Gracefully catches 503 structural server spikes without breaking the dashboard UI.
+    Converts standard input history arrays into strict google.genai types.Content schemas.
     """
     if client is None:
         return
     
     try:
-        # Build the live tracking context array out of the active user session history
-        # (Replace 'gemini-2.5-flash' with the specific target model name your project runs)
+        # 1. Transform raw lists into strict Pydantic types.Content objects
+        formatted_contents = []
+        for message in prompt_history:
+            role = message["role"]
+            # Extract content string safely
+            content_text = message["parts"][0] if isinstance(message["parts"], list) else message["parts"]
+            
+            formatted_contents.append(
+                types.Content(
+                    role=role,
+                    parts=[types.Part.from_text(text=content_text)]
+                )
+            )
+        
+        # 2. Append the latest live query to the target contents list
+        formatted_contents.append(
+            types.Content(
+                role="user",
+                parts=[types.Part.from_text(text=user_message)]
+            )
+        )
+        
+        # 3. Call generate_content_stream with strict type arrays
         response_stream = client.models.generate_content_stream(
             model='gemini-2.5-flash',
-            contents=prompt_history + [{"role": "user", "parts": [user_message]}]
+            contents=formatted_contents
         )
         
         for chunk in response_stream:
-            yield chunk.text
+            if chunk.text:
+                yield chunk.text
             
     except errors.APIError as e:
         if e.code == 503:
