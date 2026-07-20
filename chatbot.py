@@ -20,7 +20,7 @@ def get_ai_stream_response(client, prompt_history, user_message):
     """
     Sends conversational context to the Gemini engine and handles streaming text feedback.
     Converts standard input history arrays into strict google.genai types.Content schemas.
-    Uses gemini-2.5-flash-lite as requested.
+    Migrated to 'gemini-3.5-flash' to resolve the retirement deprecation error.
     """
     if client is None:
         return
@@ -48,9 +48,9 @@ def get_ai_stream_response(client, prompt_history, user_message):
             )
         )
         
-        # 3. Call generate_content_stream with the stable Flash-Lite model identifier
+        # 3. Call generate_content_stream with the new flagship model identifier
         response_stream = client.models.generate_content_stream(
-            model='gemini-2.5-flash-lite',
+            model='gemini-3.5-flash',
             contents=formatted_contents
         )
         
