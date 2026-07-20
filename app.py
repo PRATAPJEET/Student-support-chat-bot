@@ -215,7 +215,10 @@ elif st.session_state.current_page == "AI Chat Thread":
         st.session_state.messages = []
     for msg in st.session_state.messages:
         with st.chat_message(msg["role"]): 
-            content_str = msg["parts"][0] if isinstance(msg["parts"], list) else msg["parts"]
+            if "parts" in msg:
+                content_str = msg["parts"][0] if isinstance(msg["parts"], list) else msg["parts"]
+            else:
+                content_str = msg.get("content", "")
             st.markdown(content_str)
         
     if prompt := st.chat_input("Ask anything..."):
@@ -239,7 +242,10 @@ elif st.session_state.current_page == "Student Success Support":
     
     for msg in st.session_state.success_msgs:
         with st.chat_message(msg["role"]): 
-            content_str = msg["parts"][0] if isinstance(msg["parts"], list) else msg["parts"]
+            if "parts" in msg:
+                content_str = msg["parts"][0] if isinstance(msg["parts"], list) else msg["parts"]
+            else:
+                content_str = msg.get("content", "")
             st.markdown(content_str)
         
     if prompt := st.chat_input("Ask about university guidelines or deadlines..."):
@@ -265,7 +271,10 @@ elif st.session_state.current_page == "CS Programming Help":
     
     for msg in st.session_state.cs_msgs:
         with st.chat_message(msg["role"]): 
-            content_str = msg["parts"][0] if isinstance(msg["parts"], list) else msg["parts"]
+            if "parts" in msg:
+                content_str = msg["parts"][0] if isinstance(msg["parts"], list) else msg["parts"]
+            else:
+                content_str = msg.get("content", "")
             st.markdown(content_str)
         
     if prompt := st.chat_input("Paste code here..."):
@@ -291,7 +300,10 @@ elif st.session_state.current_page == "Campus Knowledge Base":
     
     for msg in st.session_state.kb_msgs:
         with st.chat_message(msg["role"]): 
-            content_str = msg["parts"][0] if isinstance(msg["parts"], list) else msg["parts"]
+            if "parts" in msg:
+                content_str = msg["parts"][0] if isinstance(msg["parts"], list) else msg["parts"]
+            else:
+                content_str = msg.get("content", "")
             st.markdown(content_str)
         
     if prompt := st.chat_input("Search the campus index..."):
@@ -330,7 +342,10 @@ elif st.session_state.current_page == "Chat with PDF Notes":
             st.session_state.pdf_msgs = []
         for msg in st.session_state.pdf_msgs:
             with st.chat_message(msg["role"]): 
-                content_str = msg["parts"][0] if isinstance(msg["parts"], list) else msg["parts"]
+                if "parts" in msg:
+                    content_str = msg["parts"][0] if isinstance(msg["parts"], list) else msg["parts"]
+                else:
+                    content_str = msg.get("content", "")
                 st.markdown(content_str)
             
         if prompt := st.chat_input("Ask a question about the uploaded document..."):
