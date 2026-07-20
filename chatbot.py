@@ -1,67 +1,43 @@
-import os
 import streamlit as st
 from google import genai
-from google.genai import types
+import google.genai.errors as errors
 from dotenv import load_dotenv
+import os
 
+# Load API environment variables from the local .env configuration
 load_dotenv()
 
-def init_chatbot(force_rebuild=False, custom_pdf_text=None):
-    """
-    Initializes the Google GenAI Client cleanly using Streamlit secrets
-    or local environment settings.
-    """
-    api_key = st.secrets.get("GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY")
-    
+def init_chatbot():
+    """Initializes the Gemini API client interface using the saved environment keys."""
+    api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
-        st.error("🔑 Missing Gemini API Key. Please configure GEMINI_API_KEY in your Streamlit Secrets.")
-        st.stop()
-        
-    if "genai_client" not in st.session_state or force_rebuild:
-        st.session_state.genai_client = genai.Client(api_key=api_key)
+        st.error("API Key missing! Please check that GEMINI_API_KEY is configured in your parameters.")
+        return None
+    return genai.Client(api_key=api_key)
 
-def get_ai_stream_response(current_prompt):
+def get_ai_stream_response(client, prompt_history, user_message):
     """
-    Fetches the full conversation response securely using the upgraded
-    production Gemini 3.5 framework to clear the 404 new user restrictions.
+    Sends conversational context to the Gemini engine and handles streaming text feedback.
+    Gracefully catches 503 structural server spikes without breaking the dashboard UI.
     """
-    if "genai_client" not in st.session_state:
-        init_chatbot()
-        
-    client = st.session_state.genai_client
-    formatted_contents = []
-    
-    if "messages" in st.session_state:
-        for msg in st.session_state.messages:
-            if msg["role"] in ["user", "model", "assistant"]:
-                role = "model" if msg["role"] == "assistant" else msg["role"]
-                formatted_contents.append(
-                    types.Content(
-                        role=role,
-                        parts=[types.Part.from_text(text=msg["content"])]
-                    )
-                )
-    
-    if not formatted_contents or formatted_contents[-1].parts[0].text != current_prompt:
-        formatted_contents.append(
-            types.Content(
-                role="user",
-                parts=[types.Part.from_text(text=current_prompt)]
-            )
-        )
+    if client is None:
+        return
     
     try:
-        # Swapping out the locked model route for the active Gemini 3.5 production string
-        response = client.models.generate_content(
-            model='gemini-3.5-flash',
-            contents=formatted_contents
+        # Build the live tracking context array out of the active user session history
+        # (Replace 'gemini-2.5-flash' with the specific target model name your project runs)
+        response_stream = client.models.generate_content_stream(
+            model='gemini-2.5-flash',
+            contents=prompt_history + [{"role": "user", "parts": [user_message]}]
         )
         
-        if response.text:
-            yield response.text
+        for chunk in response_stream:
+            yield chunk.text
+            
+    except errors.APIError as e:
+        if e.code == 503:
+            st.error("⚠️ The AI server is experiencing heavy traffic spikes right now. Please wait a moment and resend your prompt!")
         else:
-            yield "⚠️ I received an empty response from the AI engine."
-                
+            st.error(f"An unexpected API connection error occurred: {e.message}")
     except Exception as e:
-        print(f"Internal API Error Tracked: {str(e)}")
-        yield f"⚠️ API Error Encountered: {str(e)}"
+        st.error(f"System tracking error: {str(e)}")
