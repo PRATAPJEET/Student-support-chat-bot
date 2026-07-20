@@ -9,11 +9,23 @@ import os
 load_dotenv()
 
 def init_chatbot():
-    """Initializes the Gemini API client interface using the saved environment keys."""
-    # First check Streamlit secrets (for cloud deployment), then check local env
-    api_key = st.secrets.get("GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY")
+    """Initializes the Gemini API client interface safely searching all secret matrices."""
+    api_key = None
+    
+    # 1. Try standard Streamlit Secrets dictionary access
+    if "GEMINI_API_KEY" in st.secrets:
+        api_key = st.secrets["GEMINI_API_KEY"]
+    # 2. Try secondary uppercase environment parsing format (Streamlit Cloud fallback)
+    elif hasattr(st, "secrets") and st.secrets.get("GEMINI_API_KEY"):
+        api_key = st.secrets.get("GEMINI_API_KEY")
+    # 3. Try standard OS environment variable parsing (Local machine standard)
+    else:
+        api_key = os.getenv("GEMINI_API_KEY")
+        
     if not api_key:
+        # Return None safely so it doesn't cause a Pydantic crash down the line
         return None
+        
     return genai.Client(api_key=api_key)
 
 def get_ai_stream_response(client, prompt_history, user_message):
@@ -21,8 +33,9 @@ def get_ai_stream_response(client, prompt_history, user_message):
     Sends conversational context to the Gemini engine and handles streaming text feedback.
     Defensively parses history arrays to avoid structural schema validation errors.
     """
+    # CRITICAL FALLBACK: If the client is None, display an actionable message instead of crashing!
     if client is None:
-        yield "⚠️ API Client is not initialized. Please configure your GEMINI_API_KEY in Streamlit Secrets."
+        yield "❌ **API Authentication Failed!** Streamlit Cloud cannot read your `GEMINI_API_KEY`. Please check your Streamlit Settings -> Secrets panel and verify the variable name matches perfectly."
         return
     
     try:
